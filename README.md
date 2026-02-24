@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
@@ -37,23 +38,22 @@
     .status-fail { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
     .status-warn { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
     .hidden { display: none !important; }
+    .custom-check { display: flex; align-items: flex-start; gap: 0.5rem; cursor: pointer; font-size: 0.8rem; color: #475569; margin-bottom: 0.5rem; }
+    .custom-check input { width: 1rem; height: 1rem; accent-color: #6366f1; cursor: pointer; margin-top: 0.15rem; flex-shrink: 0; }
+    .custom-check-desc { color: #64748b; font-size: 0.7rem; }
     
-    /* Custom Checkbox */
-    .custom-check { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.875rem; color: #475569; }
-    .custom-check input { width: 1.25rem; height: 1.25rem; accent-color: #6366f1; cursor: pointer; }
+    /* Deviasi Category Box */
+    .dev-cat-box { background: #fafafa; border: 1px solid #e5e7eb; border-radius: 0.75rem; margin-bottom: 1rem; overflow: hidden; }
+    .dev-cat-header { background: linear-gradient(90deg, #f1f5f9 0%, #f8fafc 100%); padding: 0.75rem 1rem; border-bottom: 1px solid #e5e7eb; }
+    .dev-cat-title { font-weight: 700; font-size: 0.85rem; color: #374151; display: flex; align-items: center; gap: 0.5rem; }
+    .dev-cat-badge { background: #6366f1; color: white; padding: 0.125rem 0.5rem; border-radius: 0.25rem; font-size: 0.7rem; }
+    .dev-cat-body { padding: 1rem; }
+    .dev-note { background: #f0f9ff; color: #0369a1; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.7rem; margin-top: 0.25rem; display: inline-block; border: 1px solid #bae6fd; }
+    .dev-result-inline { font-size: 0.7rem; color: #6366f1; font-weight: 600; margin-top: 0.25rem; }
     
-    /* Dynamic Deviasi */
-    .deviasi-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1rem; margin-bottom: 0.75rem; }
-    .btn-add { background: #eef2ff; color: #4f46e5; border: 1px dashed #a5b4fc; padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-    .btn-add:hover { background: #e0e7ff; }
-    .btn-remove { background: #fee2e2; color: #dc2626; border: none; padding: 0.25rem 0.5rem; border-radius: 0.375rem; font-size: 0.75rem; cursor: pointer; }
-    
-    /* Super Tabs */
     .super-tab { padding: 0.5rem 1rem; font-weight: 600; font-size: 0.75rem; border-radius: 0.5rem; cursor: pointer; transition: all 0.2s; }
     .super-tab.active { background: #6366f1; color: white; }
     .super-tab:not(.active) { background: #f1f5f9; color: #64748b; }
-    
-    .alert-warning { background: #fef3c7; border: 1px solid #fcd34d; color: #92400e; padding: 0.75rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; margin-top: 1rem; }
   </style>
 </head>
 <body class="main-bg text-slate-700">
@@ -85,8 +85,6 @@
     <section id="page-norkil" class="page-section active">
       <div class="grid grid-cols-12 gap-6">
         <div class="col-span-12 lg:col-span-8 space-y-5">
-          
-          <!-- Product Selection -->
           <div class="card p-5">
             <h3 class="section-title">Pilih Produk Pembiayaan</h3>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -96,12 +94,8 @@
               <div id="prod-newbike_nonbpjs" onclick="selectProduct('newbike_nonbpjs')" class="prod-item"><div class="font-bold text-rose-700">NewBike Non-BPJS</div><div class="text-xs text-slate-500 mt-1">SK 155</div></div>
             </div>
           </div>
-
-          <!-- Input Form -->
           <div class="card p-5">
             <div class="space-y-5">
-              
-              <!-- Data Konsumen -->
               <div>
                 <h3 class="section-title">Data Konsumen</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
@@ -114,16 +108,15 @@
                   </div>
                   <div id="row_rating" class="hidden">
                     <label class="block text-xs font-medium text-slate-600 mb-1">Rating</label>
-                    <select id="nk_rating" class="form-input" onchange="updateNorkilUI()">
+                    <select id="nk_rating" class="form-input">
                       <option value="excellent">Excellent</option>
                       <option value="good">Good</option>
                       <option value="normal">Normal</option>
-                      <option value="warning">Warning</option>
                     </select>
                   </div>
                   <div>
                     <label class="block text-xs font-medium text-slate-600 mb-1">Lama Kerja</label>
-                    <select id="nk_lama_kerja" class="form-input" onchange="updateNorkilUI()">
+                    <select id="nk_lama_kerja" class="form-input">
                       <option value="">Pilih</option>
                       <option value="kurang">Kurang dari 1 Tahun</option>
                       <option value="1tahun">1 Tahun atau Lebih</option>
@@ -160,7 +153,6 @@
                 </div>
               </div>
 
-              <!-- Pengecekan Data -->
               <div>
                 <h3 class="section-title teal">Hasil Pengecekan Data</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -202,21 +194,9 @@
                       <option value="ya">Pernah</option>
                     </select>
                   </div>
-                  <div id="row_dpd" class="hidden">
-                    <label class="block text-xs font-medium text-slate-600 mb-1">DPD Terakhir (Hari)</label>
-                    <input type="number" id="nk_dpd" class="form-input" placeholder="0">
-                  </div>
-                  <div id="row_bd_norkil" class="hidden">
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Baki Debet BI</label>
-                    <div class="rp-wrap">
-                      <span class="rp-pre">Rp</span>
-                      <input type="text" id="nk_bd" class="form-input rp-inp" oninput="formatRupiah(this)" placeholder="0">
-                    </div>
-                  </div>
                 </div>
               </div>
 
-              <!-- BPJS Check -->
               <div id="row_bpjs" class="hidden">
                 <h3 class="section-title cyan">Pengecekan BPJS</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -237,7 +217,6 @@
                 </div>
               </div>
 
-              <!-- Keuangan -->
               <div>
                 <h3 class="section-title cyan">Keuangan</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -263,13 +242,6 @@
                     <label class="block text-xs font-medium text-slate-600 mb-1">Installment Income Ratio (%)</label>
                     <input type="number" id="nk_iir" class="form-input" placeholder="Contoh: 30">
                   </div>
-                  <div id="row_angs_old" class="hidden">
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Angsuran Sebelumnya</label>
-                    <div class="rp-wrap">
-                      <span class="rp-pre">Rp</span>
-                      <input type="text" id="nk_angs_old" class="form-input rp-inp" oninput="formatRupiah(this)" placeholder="0">
-                    </div>
-                  </div>
                   <div id="row_dp_perc" class="hidden">
                     <label class="block text-xs font-medium text-slate-600 mb-1">Down Payment (%)</label>
                     <input type="number" id="nk_dp_perc" class="form-input" placeholder="Contoh: 20">
@@ -277,19 +249,18 @@
                 </div>
               </div>
 
-              <!-- Kendaraan -->
               <div id="row_kendaraan">
                 <h3 class="section-title rose">Data Kendaraan</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                   <div id="row_jenis_kend">
                     <label class="block text-xs font-medium text-slate-600 mb-1">Jenis Kendaraan</label>
-                    <select id="nk_jenis_kend" class="form-input" onchange="updateNorkilUI()">
+                    <select id="nk_jenis_kend" class="form-input">
                       <option value="passenger">Passenger Car</option>
                       <option value="commercial">Commercial Car</option>
                     </select>
                   </div>
                   <div id="row_kategori_kend">
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Kategori Kendaraan</label>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Kategori</label>
                     <select id="nk_kategori" class="form-input">
                       <option value="A">Kategori A</option>
                       <option value="B">Kategori B</option>
@@ -298,20 +269,13 @@
                   </div>
                   <div id="row_usia_kend">
                     <label class="block text-xs font-medium text-slate-600 mb-1">Usia Kendaraan (Tahun)</label>
-                    <input type="number" id="nk_usia_kend" class="form-input" placeholder="Contoh: 5">
+                    <input type="number" id="nk_usia_kend" class="form-input" placeholder="5">
                   </div>
                   <div id="row_bpkb">
                     <label class="block text-xs font-medium text-slate-600 mb-1">Kepemilikan BPKB</label>
                     <select id="nk_bpkb" class="form-input">
                       <option value="sendiri">Sendiri/Pasangan/Ortu</option>
                       <option value="oranglain">Orang Lain</option>
-                    </select>
-                  </div>
-                  <div id="row_tipe_motor" class="hidden">
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Tipe Motor</label>
-                    <select id="nk_tipe_motor" class="form-input">
-                      <option value="standar">Standar (Beat, Revo, Mio, dll)</option>
-                      <option value="premium">Premium (PCX, NMAX, Vario 160, dll)</option>
                     </select>
                   </div>
                   <div id="row_pajak">
@@ -324,7 +288,6 @@
                 </div>
               </div>
 
-              <!-- Dokumen Persyaratan -->
               <div>
                 <h3 class="section-title amber">Dokumen Persyaratan</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
@@ -342,8 +305,6 @@
             </div>
           </div>
         </div>
-
-        <!-- Result Column -->
         <div class="col-span-12 lg:col-span-4">
           <div class="sticky top-28">
             <div class="card p-5 bg-white/90 backdrop-blur-sm border-indigo-100">
@@ -360,61 +321,236 @@
       <div class="grid grid-cols-12 gap-6">
         <div class="col-span-12 lg:col-span-8 space-y-5">
           <div class="card p-5">
-            <div class="mb-5">
+            <div class="mb-4">
               <h2 class="text-lg font-bold text-slate-800">Pendeteksi Deviasi</h2>
-              <p class="text-sm text-slate-500">Tambahkan jenis deviasi sesuai kondisi.</p>
+              <p class="text-sm text-slate-500">Isi form atau centang jenis deviasi yang terjadi. Kosongkan jika tidak ada.</p>
             </div>
-            <div class="space-y-5">
-              
-              <!-- Basic Info -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-xs font-medium text-slate-600 mb-1">Jenis Produk *</label>
-                  <select id="dev_prod" class="form-input" onchange="updateDeviasiUI()">
-                    <option value="motor">MotorKu / NB</option>
-                    <option value="mobil">MobilKu</option>
-                    <option value="masku">MasKu</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-xs font-medium text-slate-600 mb-1">Status Konsumen *</label>
-                  <select id="dev_status" class="form-input" onchange="updateDeviasiUI()">
-                    <option value="baru">Baru</option>
-                    <option value="terdaftar">Terdaftar</option>
-                  </select>
-                </div>
-                <div id="dev_row_rating" class="hidden">
-                  <label class="block text-xs font-medium text-slate-600 mb-1">Rating Internal</label>
-                  <select id="dev_rating" class="form-input">
-                    <option value="none">Normal / Baru</option>
-                    <option value="excellent">Excellent</option>
-                    <option value="good">Good</option>
-                  </select>
-                </div>
+            
+            <!-- Info Produk & Status -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5 p-4 bg-indigo-50 rounded-xl">
+              <div>
+                <label class="block text-xs font-medium text-slate-600 mb-1">Jenis Produk *</label>
+                <select id="dev_prod" class="form-input">
+                  <option value="motor">MotorKu / NB</option>
+                  <option value="mobil">MobilKu</option>
+                  <option value="masku">MasKu</option>
+                </select>
               </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-600 mb-1">Status Konsumen *</label>
+                <select id="dev_status" class="form-input" onchange="updateDeviasiUI()">
+                  <option value="baru">Baru</option>
+                  <option value="terdaftar">Terdaftar</option>
+                </select>
+              </div>
+              <div id="dev_row_rating" class="hidden">
+                <label class="block text-xs font-medium text-slate-600 mb-1">Rating Internal</label>
+                <select id="dev_rating" class="form-input">
+                  <option value="none">Normal / Baru</option>
+                  <option value="excellent">Excellent</option>
+                  <option value="good">Good</option>
+                </select>
+              </div>
+            </div>
 
-              <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                <div class="flex justify-between items-center mb-3">
-                   <h4 class="font-semibold text-sm text-slate-700">Daftar Deviasi</h4>
-                   <select id="dev_group_select" class="form-input w-auto text-xs py-2" onchange="addDeviasiField()">
-                     <option value="">+ Tambah Jenis Deviasi</option>
-                     <option value="01">01 - Negative List</option>
-                     <option value="02">02 - DSR & Min Penghasilan</option>
-                     <option value="03">03 - Skema Produk</option>
-                     <option value="04">04 - Unit Pembiayaan</option>
-                     <option value="05">05 - Profil Konsumen</option>
-                     <option value="06">06 - Cover Area</option>
-                     <option value="07">07 - Dokumen</option>
-                   </select>
-                </div>
-                <div id="deviasi-container" class="space-y-3">
-                  <!-- Dynamic fields will appear here -->
+            <!-- 01 - Negative List -->
+            <div class="dev-cat-box">
+              <div class="dev-cat-header">
+                <span class="dev-cat-title"><span class="dev-cat-badge">01</span> NEGATIVE LIST</span>
+              </div>
+              <div class="dev-cat-body">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Kolektibilitas (Kol)</label>
+                    <select id="dev_kol" class="form-input">
+                      <option value="">-- Tidak Ada Deviasi --</option>
+                      <option value="2">Kol 2</option>
+                      <option value="3">Kol 3</option>
+                      <option value="4">Kol 4</option>
+                      <option value="5">Kol 5</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Baki Debet (Rp)</label>
+                    <div class="rp-wrap">
+                      <span class="rp-pre">Rp</span>
+                      <input type="text" id="dev_bd" class="form-input rp-inp" oninput="formatRupiah(this)" placeholder="0">
+                    </div>
+                  </div>
+                  <div class="flex items-end">
+                    <div id="dev_01_result" class="text-xs text-slate-500 italic"></div>
+                  </div>
                 </div>
               </div>
+            </div>
 
-              <div class="pt-4 flex justify-end">
-                <button onclick="checkDeviasi()" class="btn-check">Cek Level Approval</button>
+            <!-- 02 - DSR -->
+            <div class="dev-cat-box">
+              <div class="dev-cat-header">
+                <span class="dev-cat-title"><span class="dev-cat-badge">02</span> DSR & MIN PENGHASILAN</span>
               </div>
+              <div class="dev-cat-body">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">DSR (%)</label>
+                    <input type="number" id="dev_dsr" class="form-input" placeholder="Contoh: 70">
+                  </div>
+                  <div class="flex items-end">
+                    <div id="dev_02_result" class="text-xs text-slate-500 italic"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 03 - Skema Produk -->
+            <div class="dev-cat-box">
+              <div class="dev-cat-header">
+                <span class="dev-cat-title"><span class="dev-cat-badge">03</span> SKEMA PRODUK PEMBIAYAAN</span>
+              </div>
+              <div class="dev-cat-body space-y-4">
+                
+                <!-- Tenor -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
+                  <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Tenor (Bulan)</label>
+                    <input type="number" id="dev_tenor" class="form-input" placeholder="Contoh: 50">
+                  </div>
+                  <div id="dev_03_tenor_result" class="text-xs text-slate-500 italic"></div>
+                </div>
+
+                <!-- LTV -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
+                  <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Kenaikan LTV (%)</label>
+                    <input type="number" id="dev_ltv" class="form-input" placeholder="Contoh: 5">
+                  </div>
+                  <div id="dev_03_ltv_result" class="text-xs text-slate-500 italic"></div>
+                </div>
+
+                <!-- Take Over -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
+                  <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Take Over Fincoy</label>
+                    <select id="dev_to" class="form-input">
+                      <option value="">-- Tidak Ada --</option>
+                      <option value="current">Current</option>
+                      <option value="tidakcurrent">Tidak Current</option>
+                    </select>
+                  </div>
+                  <div id="dev_03_to_result" class="text-xs text-slate-500 italic"></div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- 04 - Unit Pembiayaan -->
+            <div class="dev-cat-box">
+              <div class="dev-cat-header">
+                <span class="dev-cat-title"><span class="dev-cat-badge">04</span> UNIT PEMBIAYAAN (AGUNAN)</span>
+              </div>
+              <div class="dev-cat-body grid grid-cols-1 md:grid-cols-2 gap-x-4">
+                <label class="custom-check">
+                  <input type="checkbox" id="dev_04_faktur">
+                  <div>
+                    <span class="font-medium">Faktur Tidak Ada</span>
+                    <div class="custom-check-desc">C040321(M) - CAC</div>
+                  </div>
+                </label>
+                <label class="custom-check">
+                  <input type="checkbox" id="dev_04_unit">
+                  <div>
+                    <span class="font-medium">Unit Diluar Ketentuan</span>
+                    <div class="custom-check-desc">C040621(A/M) - CAM</div>
+                  </div>
+                </label>
+                <label class="custom-check">
+                  <input type="checkbox" id="dev_04_kir">
+                  <div>
+                    <span class="font-medium">KIR Tidak Aktif</span>
+                    <div class="custom-check-desc">C040821(M) - CAC</div>
+                  </div>
+                </label>
+                <label class="custom-check">
+                  <input type="checkbox" id="dev_04_plat">
+                  <div>
+                    <span class="font-medium">Plat Beda Provinsi</span>
+                    <div class="custom-check-desc">RD585(M) - CAC</div>
+                    <span class="dev-note">Wajib BBN atau LTV turun 5%</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- 05 - Profil Konsumen -->
+            <div class="dev-cat-box">
+              <div class="dev-cat-header">
+                <span class="dev-cat-title"><span class="dev-cat-badge">05</span> PROFIL KONSUMEN</span>
+              </div>
+              <div class="dev-cat-body">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Usia Pemohon (Tahun)</label>
+                    <input type="number" id="dev_usia" class="form-input" placeholder="Contoh: 65">
+                  </div>
+                  <div class="flex items-end">
+                    <div id="dev_05_result" class="text-xs text-slate-500 italic"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 06 - Cover Area -->
+            <div class="dev-cat-box">
+              <div class="dev-cat-header">
+                <span class="dev-cat-title"><span class="dev-cat-badge">06</span> COVER AREA & RED AREA</span>
+              </div>
+              <div class="dev-cat-body grid grid-cols-1 md:grid-cols-2 gap-x-4">
+                <label class="custom-check">
+                  <input type="checkbox" id="dev_06_red">
+                  <div>
+                    <span class="font-medium">Red Area</span>
+                    <div class="custom-check-desc">C060121(M) - CAM</div>
+                    <span class="dev-note">Rekomendasi Collection wajib</span>
+                  </div>
+                </label>
+                <label class="custom-check">
+                  <input type="checkbox" id="dev_06_jauh">
+                  <div>
+                    <span class="font-medium">Cover Area Jauh</span>
+                    <div class="custom-check-desc">C060221(M) - CAM</div>
+                    <span class="dev-note">Jawa >70KM tidak dapat dibiayai</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- 07 - Dokumen -->
+            <div class="dev-cat-box">
+              <div class="dev-cat-header">
+                <span class="dev-cat-title"><span class="dev-cat-badge">07</span> DOKUMEN PEMBIAYAAN</span>
+              </div>
+              <div class="dev-cat-body grid grid-cols-1 md:grid-cols-2 gap-x-4">
+                <label class="custom-check">
+                  <input type="checkbox" id="dev_07_npwp">
+                  <div>
+                    <span class="font-medium">NPWP Tidak Sesuai</span>
+                    <div class="custom-check-desc">C070121(A) - CAC</div>
+                    <span class="dev-note">PH > 50 Juta</span>
+                  </div>
+                </label>
+                <label class="custom-check">
+                  <input type="checkbox" id="dev_07_ttd">
+                  <div>
+                    <span class="font-medium">Pasangan Tidak TTD</span>
+                    <div class="custom-check-desc">RD567(A) - CAC</div>
+                    <span class="dev-note">Isi Form F-179</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div class="pt-4 flex justify-end">
+              <button onclick="checkDeviasi()" class="btn-check">Cek Level Approval</button>
             </div>
           </div>
         </div>
@@ -459,7 +595,7 @@
                   </div>
                   <div>
                     <label class="block text-xs font-medium text-slate-600 mb-1">Rating Konsumen</label>
-                    <select id="sp_rating" class="form-input" onchange="updateSuperUI()">
+                    <select id="sp_rating" class="form-input">
                       <option value="excellent">Excellent</option>
                       <option value="good">Good</option>
                       <option value="normal">Normal</option>
@@ -520,16 +656,16 @@
                 <h3 class="section-title cyan">Keuangan</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Installment Income Ratio (%)</label>
-                    <input type="number" id="sp_iir" class="form-input" placeholder="Contoh: 30">
+                    <label class="block text-xs font-medium text-slate-600 mb-1">IIR (%)</label>
+                    <input type="number" id="sp_iir" class="form-input" placeholder="30">
                   </div>
                   <div>
                     <label class="block text-xs font-medium text-slate-600 mb-1">Maksimal LTV (%)</label>
-                    <input type="number" id="sp_ltv" class="form-input" placeholder="Contoh: 90">
+                    <input type="number" id="sp_ltv" class="form-input" placeholder="90">
                   </div>
                   <div>
                     <label class="block text-xs font-medium text-slate-600 mb-1">Tenor (Bulan)</label>
-                    <input type="number" id="sp_tenor" class="form-input" placeholder="Contoh: 48">
+                    <input type="number" id="sp_tenor" class="form-input" placeholder="48">
                   </div>
                   <div>
                     <label class="block text-xs font-medium text-slate-600 mb-1">Total Exposure</label>
@@ -546,14 +682,14 @@
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
                     <label class="block text-xs font-medium text-slate-600 mb-1">Jenis Kendaraan</label>
-                    <select id="sp_jenis" class="form-input" onchange="updateSuperUI()">
+                    <select id="sp_jenis" class="form-input">
                       <option value="passenger">Passenger</option>
                       <option value="commercial">Commercial</option>
                     </select>
                   </div>
                   <div>
                     <label class="block text-xs font-medium text-slate-600 mb-1">Usia Kendaraan (Tahun)</label>
-                    <input type="number" id="sp_usia_kend" class="form-input" placeholder="Contoh: 5">
+                    <input type="number" id="sp_usia_kend" class="form-input" placeholder="5">
                   </div>
                   <div>
                     <label class="block text-xs font-medium text-slate-600 mb-1">Kepemilikan BPKB</label>
@@ -572,13 +708,12 @@
                 </div>
               </div>
 
-              <!-- Take Over Specific -->
               <div id="row_to_specific" class="hidden">
                 <h3 class="section-title amber">Data Take Over</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Angsuran Sudah Dibayar (Bulan)</label>
-                    <input type="number" id="sp_to_bayar" class="form-input" placeholder="Jumlah bulan">
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Angsuran Dibayar (Bulan)</label>
+                    <input type="number" id="sp_to_bayar" class="form-input" placeholder="12">
                   </div>
                   <div>
                     <label class="block text-xs font-medium text-slate-600 mb-1">Maksimal Overdue</label>
@@ -590,7 +725,6 @@
                 </div>
               </div>
 
-              <!-- Dokumen -->
               <div>
                 <h3 class="section-title">Dokumen Pembiayaan</h3>
                 <div class="grid grid-cols-2 gap-3">
@@ -629,7 +763,7 @@
     const getVal = (id) => $(id) ? $(id).value : '';
     const formatCurr = (num) => 'Rp ' + new Intl.NumberFormat('id-ID').format(num);
 
-    /* ===== NAVIGATION LOGIC ===== */
+    /* ===== NAVIGATION ===== */
     function navigatePage(pageName) {
       document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
@@ -637,7 +771,7 @@
       $('btn-' + pageName).classList.add('active');
     }
 
-    /* ===== NORMAL KILAT LOGIC ===== */
+    /* ===== NORMAL KILAT ===== */
     let currentProduct = 'mobilku';
     
     function selectProduct(prod) {
@@ -649,7 +783,6 @@
 
     function updateNorkilUI() {
       const status = getVal('nk_status');
-      const kbij = getVal('nk_kbij');
       const rumah = getVal('nk_rumah');
       
       if (status === 'eksisting') $('row_rating').classList.remove('hidden');
@@ -658,20 +791,9 @@
       if (rumah === 'sewa') $('row_lama_tinggal').classList.remove('hidden');
       else $('row_lama_tinggal').classList.add('hidden');
 
-      // Reset All Special Fields
-      $('row_dp_perc').classList.add('hidden');
-      $('row_region').classList.add('hidden');
-      $('row_bpjs').classList.add('hidden');
-      $('row_dukcapil').classList.add('hidden');
-      $('row_kbij_pas').classList.add('hidden');
-      $('row_dpd').classList.add('hidden');
-      $('row_bd_norkil').classList.add('hidden');
-      $('row_angs_old').classList.add('hidden');
-      $('row_jenis_kend').classList.add('hidden');
-      $('row_kategori_kend').classList.add('hidden');
-      $('row_tipe_motor').classList.add('hidden');
-      $('row_usia_kend').classList.add('hidden');
-      $('row_pajak').classList.add('hidden');
+      ['row_dp_perc', 'row_region', 'row_bpjs', 'row_dukcapil', 'row_kbij_pas', 'row_jenis_kend', 'row_kategori_kend', 'row_usia_kend', 'row_pajak'].forEach(id => {
+        if($(id)) $(id).classList.add('hidden');
+      });
 
       if (currentProduct === 'mobilku') {
         $('row_dukcapil').classList.remove('hidden');
@@ -680,219 +802,102 @@
         $('row_kategori_kend').classList.remove('hidden');
         $('row_usia_kend').classList.remove('hidden');
         $('row_bpkb').classList.remove('hidden');
-        $('row_pajak').classList.remove('hidden'); // Added based on general logic, though SK 186 specific tax deviation not explicit in NK table, but usually checked.
-        $('doc_ktp').checked = true; $('doc_kk').checked = true;
+        $('row_pajak').classList.remove('hidden');
       } 
       else if (currentProduct === 'motorku') {
-        $('row_tipe_motor').classList.remove('hidden');
         $('row_usia_kend').classList.remove('hidden');
         $('row_bpkb').classList.remove('hidden');
         $('row_region').classList.remove('hidden');
-        $('row_pajak').classList.remove('hidden'); // SK 167 Poin 12
-        
-        if (status === 'eksisting' && kbij === 'no') {
-          $('row_dpd').classList.remove('hidden');
-          $('row_bd_norkil').classList.remove('hidden');
-        }
-        if (status === 'eksisting') $('row_angs_old').classList.remove('hidden');
+        $('row_pajak').classList.remove('hidden');
       }
       else if (currentProduct === 'newbike_bpjs') {
         $('row_bpjs').classList.remove('hidden');
         $('row_dp_perc').classList.remove('hidden');
-        $('row_tipe_motor').classList.remove('hidden');
         $('row_bpkb').classList.remove('hidden');
         $('row_pajak').classList.remove('hidden');
       }
       else if (currentProduct === 'newbike_nonbpjs') {
         $('row_dp_perc').classList.remove('hidden');
         $('row_region').classList.remove('hidden');
-        $('row_tipe_motor').classList.remove('hidden');
         $('row_bpkb').classList.remove('hidden');
         $('row_pajak').classList.remove('hidden');
       }
     }
 
     function checkNorkil() {
-      // Mandatory check based on user request: only product and status are mandatory?
-      // "yang wajib diisi pada deviasi adalah jenis produk dan status konsumen..."
-      // For NK, usually critical fields are needed. I will implement soft validation (warning).
-      
       let res = [];
       let status = 'pass';
       const exp = parseNum(getVal('nk_exp'));
       const statusKonsumen = getVal('nk_status');
 
-      // Common Checks
-      if (getVal('nk_internal') === 'ya') { res.push({t: 'fail', m: 'SK: Terindikasi Internal Negative List.'}); status='fail'; } else { res.push({t: 'pass', m: 'Bebas Internal Neg List'}); }
-      if (getVal('nk_tbwo') === 'ya') { res.push({t: 'fail', m: 'SK: Memiliki riwayat TB/WO.'}); status='fail'; } else { res.push({t: 'pass', m: 'Bebas TB/WO'}); }
+      if (getVal('nk_internal') === 'ya') { res.push({t: 'fail', m: 'Terindikasi Internal Negative List.'}); status='fail'; }
+      if (getVal('nk_tbwo') === 'ya') { res.push({t: 'fail', m: 'Memiliki riwayat TB/WO.'}); status='fail'; }
 
-      // MobilKu Logic (SK 186)
       if (currentProduct === 'mobilku') {
-        if (getVal('nk_dukcapil') !== 'match') { res.push({t: 'fail', m: 'SK 186: Dukcapil Wajib Match.'}); status='fail'; } else { res.push({t: 'pass', m: 'Dukcapil Match'}); }
-        if (getVal('nk_lama_kerja') !== '1tahun') { res.push({t: 'fail', m: 'SK 186: Lama Kerja minimal 1 Tahun.'}); status='fail'; } else { res.push({t: 'pass', m: 'Lama Kerja Sesuai'}); }
-        if (getVal('nk_rumah') === 'sewa') { res.push({t: 'fail', m: 'SK 186: Status sewa tidak diperbolehkan.'}); status='fail'; } else { res.push({t: 'pass', m: 'Status Rumah Sesuai'}); }
+        if (getVal('nk_dukcapil') !== 'match') { res.push({t: 'fail', m: 'Dukcapil Wajib Match.'}); status='fail'; }
+        if (getVal('nk_lama_kerja') !== '1tahun') { res.push({t: 'fail', m: 'Lama Kerja minimal 1 Tahun.'}); status='fail'; }
+        if (getVal('nk_rumah') === 'sewa') { res.push({t: 'fail', m: 'Status sewa tidak diperbolehkan.'}); status='fail'; }
         
         const kbij = getVal('nk_kbij'); const kbijPas = getVal('nk_kbij_pas');
-        if (kbij === 'yes') { res.push({t: 'pass', m: 'KBIJ Pemohon Yes'}); }
-        else if (kbij === 'notfound') {
-           if (kbijPas === 'yes') {
-             res.push({t: 'pass', m: 'KBIJ Pemohon NF & Pasangan Yes -> Sesuai'}); 
-             res.push({t: 'warn', m: 'SK 186: Wajib validasi ulang oleh CAC.'}); 
-             if(status!=='fail') status='warn';
-           } else {
-             res.push({t: 'fail', m: 'SK 186: KBIJ Pemohon & Pasangan NF -> Tidak Dapat Diproses.'}); status='fail';
-           }
-        } else { res.push({t: 'fail', m: 'SK 186: KBIJ No tidak diperbolehkan Normal Kilat.'}); status='fail'; }
+        if (kbij === 'notfound' && kbijPas !== 'yes') { res.push({t: 'fail', m: 'KBIJ Pemohon & Pasangan NF -> Tidak Dapat Diproses.'}); status='fail'; }
+        if (kbij === 'no') { res.push({t: 'fail', m: 'KBIJ No tidak diperbolehkan Normal Kilat.'}); status='fail'; }
 
-        if (getVal('nk_kategori') !== 'A') { res.push({t: 'fail', m: 'SK 186: Hanya Kategori A.'}); status='fail'; } else { res.push({t: 'pass', m: 'Kategori Sesuai'}); }
+        if (getVal('nk_kategori') !== 'A') { res.push({t: 'fail', m: 'Hanya Kategori A.'}); status='fail'; }
         
         const usiaKend = parseNum(getVal('nk_usia_kend'));
-        if (usiaKend > 10) { res.push({t: 'fail', m: 'SK 186: Usia kendaraan > 10 tahun.'}); status='fail'; } else { res.push({t: 'pass', m: 'Usia Kendaraan Sesuai'}); }
+        if (usiaKend > 10) { res.push({t: 'fail', m: 'Usia kendaraan > 10 tahun.'}); status='fail'; }
         
-        if (getVal('nk_bpkb') === 'oranglain') { res.push({t: 'warn', m: 'SK 186: BPKB Orang Lain WAJIB BBN.'}); if(status!=='fail')status='warn'; }
-
-        if (exp > 175000000) { res.push({t: 'fail', m: 'SK 186: Exposure > 175 Juta.'}); status='fail'; } else { res.push({t: 'pass', m: 'Exposure Sesuai'}); }
+        if (getVal('nk_bpkb') === 'oranglain') { res.push({t: 'warn', m: 'BPKB Orang Lain WAJIB BBN.'}); if(status!=='fail')status='warn'; }
+        if (exp > 175000000) { res.push({t: 'fail', m: 'Exposure > 175 Juta.'}); status='fail'; }
         
         const iir = parseNum(getVal('nk_iir')); const maxIIR = getVal('nk_jenis_inc') === 'fixed' ? 40 : 30;
-        if (iir > maxIIR) { res.push({t: 'fail', m: 'SK 186: IIR ' + iir + '% > Max ' + maxIIR + '%.'}); status='fail'; } else { res.push({t: 'pass', m: 'IIR Sesuai'}); }
-
-        if (getVal('nk_pajak') === 'mati') { res.push({t: 'warn', m: 'Pajak Mati: Wajib perpanjangan (potong pencairan).'}); if(status!=='fail')status='warn'; }
+        if (iir > maxIIR) { res.push({t: 'fail', m: 'IIR ' + iir + '% > Max ' + maxIIR + '%.'}); status='fail'; }
+        if (getVal('nk_pajak') === 'mati') { res.push({t: 'warn', m: 'Pajak Mati: Wajib perpanjangan.'}); if(status!=='fail')status='warn'; }
       } 
-      
-      // MotorKu Logic (SK 167)
       else if (currentProduct === 'motorku') {
         const rating = getVal('nk_rating');
         const maxExp = statusKonsumen === 'baru' ? 25000000 : 45000000;
-        if (exp > maxExp) { res.push({t: 'fail', m: 'SK 167: Exposure > ' + formatCurr(maxExp) + '.'}); status='fail'; } else { res.push({t: 'pass', m: 'Exposure Sesuai'}); }
-        
-        if (getVal('nk_pajak') === 'mati') {
-           // SK 167 Poin 12
-           res.push({t: 'warn', m: 'SK 167: Pajak Mati -> LTV Turun 10%.'}); 
-           if(status!=='fail')status='warn';
-           res.push({t: 'warn', m: 'Flag: RD659 (Approval CAC).'});
-        }
-
-        const iir = parseNum(getVal('nk_iir'));
-        // SK 167 doesn't explicitly state max IIR for NK, but usually standard applies. User asked to use IIR.
-        // I will check standard IIR: Fixed 40%, Non 30%?
-        // Assuming standard IIR applies if user inputs it.
-        
-        if (statusKonsumen === 'eksisting') {
-          const oldAngs = parseNum(getVal('nk_angs_old'));
-          // SK 167 Poin 3b: Angsuran baru <= 1.5x lama
-          // But there is no "Angsuran Baru" input field per user request (only IIR).
-          // So I cannot check this rule. Skipping.
-        }
-        
-        // Sewa/Kontrak Check
+        if (exp > maxExp) { res.push({t: 'fail', m: 'Exposure > ' + formatCurr(maxExp) + '.'}); status='fail'; }
+        if (getVal('nk_pajak') === 'mati') { res.push({t: 'warn', m: 'Pajak Mati -> LTV Turun 10%.'}); if(status!=='fail')status='warn'; }
         if (getVal('nk_rumah') === 'sewa') {
-          if (statusKonsumen === 'baru' || (statusKonsumen === 'eksisting' && rating === 'normal')) { res.push({t: 'fail', m: 'SK 167: Tidak diperbolehkan sewa.'}); status='fail'; }
-          else { res.push({t: 'pass', m: 'Status Rumah Sesuai (Exc/Good)'}); }
+          if (statusKonsumen === 'baru' || rating === 'normal') { res.push({t: 'fail', m: 'Tidak diperbolehkan sewa.'}); status='fail'; }
         }
       } 
-      
-      // NewBike BPJS (SK 156)
       else if (currentProduct === 'newbike_bpjs') {
-        if (getVal('nk_bpjs_status') !== 'terdaftar') { res.push({t: 'fail', m: 'SK 156: Wajib terdaftar BPJS.'}); status='fail'; } else { res.push({t: 'pass', m: 'BPJS Terdaftar'}); }
-        if (getVal('nk_bpjs_income') !== 'ya') { res.push({t: 'fail', m: 'SK 156: Penghasilan JMO wajib tervalidasi.'}); status='fail'; }
-        if (getVal('nk_lama_kerja') !== '6bulan' && getVal('nk_lama_kerja') !== '1tahun') { res.push({t: 'fail', m: 'SK 156: Lama kerja min 6 bln.'}); status='fail'; } else { res.push({t: 'pass', m: 'Lama Kerja Sesuai'}); }
-        if (exp > 45000000) { res.push({t: 'fail', m: 'SK 156: Max Exposure 45 Juta.'}); status='fail'; } else { res.push({t: 'pass', m: 'Exposure Sesuai'}); }
+        if (getVal('nk_bpjs_status') !== 'terdaftar') { res.push({t: 'fail', m: 'Wajib terdaftar BPJS.'}); status='fail'; }
+        if (getVal('nk_bpjs_income') !== 'ya') { res.push({t: 'fail', m: 'Penghasilan JMO wajib tervalidasi.'}); status='fail'; }
+        if (exp > 45000000) { res.push({t: 'fail', m: 'Max Exposure 45 Juta.'}); status='fail'; }
         
         const dpPerc = parseNum(getVal('nk_dp_perc'));
         if (getVal('nk_rumah') === 'sewa') {
-           const lamaTinggal = parseNum(getVal('nk_lama_tinggal'));
-           if (lamaTinggal < 12) { res.push({t: 'fail', m: 'SK 156: Sewa min 12 bln tinggal.'}); status='fail'; }
-           else if (dpPerc < 15) { res.push({t: 'fail', m: 'SK 156: Sewa -> Min DP 15%.'}); status='fail'; }
-           else { res.push({t: 'pass', m: 'Status Rumah & DP Sesuai'}); }
+           if (parseNum(getVal('nk_lama_tinggal')) < 12) { res.push({t: 'fail', m: 'Sewa min 12 bln tinggal.'}); status='fail'; }
+           else if (dpPerc < 15) { res.push({t: 'fail', m: 'Sewa -> Min DP 15%.'}); status='fail'; }
         } else {
-          if (dpPerc < 5) { res.push({t: 'fail', m: 'SK 156: Min DP 5%.'}); status='fail'; } else { res.push({t: 'pass', m: 'DP Sesuai (Min 5%)'}); }
+          if (dpPerc < 5) { res.push({t: 'fail', m: 'Min DP 5%.'}); status='fail'; }
         }
-        const iir = parseNum(getVal('nk_iir'));
-        if (iir > 45) { res.push({t: 'fail', m: 'SK 156: IIR > 45%.'}); status='fail'; } else { res.push({t: 'pass', m: 'IIR Sesuai'}); }
+        if (parseNum(getVal('nk_iir')) > 45) { res.push({t: 'fail', m: 'IIR > 45%.'}); status='fail'; }
       } 
-      
-      // NewBike Non-BPJS (SK 155)
       else if (currentProduct === 'newbike_nonbpjs') {
-        const rating = getVal('nk_rating');
-        if (exp > 45000000) { res.push({t: 'fail', m: 'SK 155: Max Exposure 45 Juta.'}); status='fail'; } else { res.push({t: 'pass', m: 'Exposure Sesuai'}); }
-        
+        if (exp > 45000000) { res.push({t: 'fail', m: 'Max Exposure 45 Juta.'}); status='fail'; }
         const dpPerc = parseNum(getVal('nk_dp_perc'));
         if (getVal('nk_rumah') === 'sewa') {
-           const lamaTinggal = parseNum(getVal('nk_lama_tinggal'));
-           if (lamaTinggal < 12) { res.push({t: 'fail', m: 'SK 155: Sewa min 12 bln tinggal.'}); status='fail'; }
-           else if (dpPerc < 15) { res.push({t: 'fail', m: 'SK 155: Sewa -> Min DP 15%.'}); status='fail'; }
-           else { res.push({t: 'pass', m: 'Status Rumah & DP Sesuai'}); }
+           if (parseNum(getVal('nk_lama_tinggal')) < 12) { res.push({t: 'fail', m: 'Sewa min 12 bln tinggal.'}); status='fail'; }
+           else if (dpPerc < 15) { res.push({t: 'fail', m: 'Sewa -> Min DP 15%.'}); status='fail'; }
         } else {
-          if (statusKonsumen === 'eksisting' && (rating === 'excellent' || rating === 'good')) {
-            if (dpPerc < 8) { res.push({t: 'fail', m: 'SK 155: Exc/Good -> Min DP 8%.'}); status='fail'; } else { res.push({t: 'pass', m: 'DP Sesuai (Min 8%)'}); }
-          } else { res.push({t: 'pass', m: 'DP Sesuai (Standar)'}); }
+          const rating = getVal('nk_rating');
+          if (statusKonsumen === 'eksisting' && (rating === 'excellent' || rating === 'good') && dpPerc < 8) { res.push({t: 'fail', m: 'Exc/Good -> Min DP 8%.'}); status='fail'; }
         }
-        
         let maxIIR = getVal('nk_jenis_inc') === 'fixed' ? 30 : 25;
         const region = getVal('nk_region');
-        if (region === 'jatengsel' || region === 'jatengut' || region === 'jabar') { maxIIR = getVal('nk_jenis_inc') === 'fixed' ? 35 : 30; }
-        const iir = parseNum(getVal('nk_iir'));
-        if (iir > maxIIR) { res.push({t: 'fail', m: 'SK 155: IIR ' + iir + '% > Max ' + maxIIR + '%.'}); status='fail'; } else { res.push({t: 'pass', m: 'IIR Sesuai'}); }
+        if (region === 'jatengsel' || region === 'jatengut' || region === 'jabar') maxIIR += 5;
+        if (parseNum(getVal('nk_iir')) > maxIIR) { res.push({t: 'fail', m: 'IIR > ' + maxIIR + '%.'}); status='fail'; }
       }
 
       renderResult('res-norkil', res, status);
     }
 
     /* ===== DEVIASI LOGIC ===== */
-    
-    // Database Deviasi
-    const devDB = {
-      '01': [
-        { code: 'C010124(M)', desc: 'Kol 5 BD > 50 Jt', app: 'CRO', cond: (d) => d.bd > 50000000 && d.kol == 5 },
-        { code: 'C010224(M)', desc: 'Kol 5 BD 30-50 Jt', app: 'CADH', cond: (d) => d.bd >= 30000000 && d.bd <= 50000000 && d.kol == 5 },
-        { code: 'C010424(M)', desc: 'Kol 5 BD 5-30 Jt', app: 'CDDH', cond: (d) => d.bd >= 5000000 && d.bd < 30000000 && d.kol == 5 },
-        { code: 'C010724(M)', desc: 'Kol 5 BD 1-5 Jt', app: 'CDH', cond: (d) => d.bd > 1000000 && d.bd < 5000000 && d.kol == 5 },
-        { code: 'C010924(M)', desc: 'Kol 5 BD <= 1 Jt', app: 'CAM', cond: (d) => d.bd <= 1000000 && d.kol == 5 },
-        { code: 'C010324(M)', desc: 'Kol 4 BD > 50 Jt', app: 'CADH', cond: (d) => d.bd > 50000000 && d.kol == 4 },
-        { code: 'C010524(M)', desc: 'Kol 4 BD <= 50 Jt', app: 'CDDH', cond: (d) => d.bd <= 50000000 && d.kol == 4 },
-        { code: 'C010624(M)', desc: 'Kol 3 BD > 50 Jt', app: 'CDDH', cond: (d) => d.bd > 50000000 && d.kol == 3 },
-        { code: 'C011024(M)', desc: 'Kol 3 BD 5-50 Jt', app: 'CAM', cond: (d) => d.bd >= 5000000 && d.bd <= 50000000 && d.kol == 3 },
-        { code: 'C011224(M)', desc: 'Kol 3 BD <= 5 Jt', app: 'CAC', cond: (d) => d.bd < 5000000 && d.kol == 3 },
-        { code: 'C010824(M)', desc: 'Kol 2 BD > 50 Jt', app: 'CDH', cond: (d) => d.bd > 50000000 && d.kol == 2 },
-        { code: 'C011124(M)', desc: 'Kol 2 BD 5-50 Jt', app: 'CAM', cond: (d) => d.bd >= 5000000 && d.bd <= 50000000 && d.kol == 2 },
-        { code: 'C011324(M)', desc: 'Kol 2 BD <= 5 Jt', app: 'CAC', cond: (d) => d.bd < 5000000 && d.kol == 2 }
-      ],
-      '02': [
-        { code: 'RD653(M)', desc: 'DSR > 80%', app: 'CDH', cond: (d) => d.dsr > 80 },
-        { code: 'C020122(A)', desc: 'DSR 55-80% (NB)', app: 'CAM', cond: (d) => d.dsr > 55 && d.dsr <= 80 && d.prod === 'NB' },
-        { code: 'C020422(A)', desc: 'DSR 65-80% (Motor)', app: 'CAM', cond: (d) => d.dsr > 65 && d.dsr <= 80 && d.prod === 'motor' },
-        { code: 'C020622(A)', desc: 'DSR 55-80% (Mobil)', app: 'CAM', cond: (d) => d.dsr > 55 && d.dsr <= 80 && d.prod === 'mobil' }
-      ],
-      '03': [
-        { code: 'C030124(M)', desc: 'Tenor > 48-60 Bulan (Mobil)', app: 'CAC', cond: (d) => d.tenor > 48 && d.tenor <= 60 && d.prod === 'mobil' },
-        { code: 'C030121(M)', desc: 'Tenor > 36-48 Bulan (Motor)', app: 'CAC', cond: (d) => d.tenor > 36 && d.tenor <= 48 && d.prod === 'motor' },
-        { code: 'C030921(M)', desc: 'LTV > 10%', app: 'CAM', cond: (d) => d.ltvdev > 10 },
-        { code: 'C030821(M)', desc: 'LTV s.d 10%', app: 'CAC', cond: (d) => d.ltvdev <= 10 && d.ltvdev > 0 },
-        { code: 'C031121(M)', desc: 'Take Over Tidak Current', app: 'CAM', cond: (d) => d.totype === 'notcurrent' },
-        { code: 'C030123(M)', desc: 'Take Over Current', app: 'CAC', cond: (d) => d.totype === 'current' }
-      ],
-      '04': [
-        { code: 'C040321(M)', desc: 'Faktur Tidak Ada', app: 'CAC', cond: () => true },
-        { code: 'C040621(A/M)', desc: 'Unit Diluar Ketentuan', app: 'CAM', cond: () => true },
-        { code: 'C040821(M)', desc: 'KIR Tidak Aktif', app: 'CAC', cond: () => true },
-        { code: 'RD585(M)', desc: 'Plat Beda Provinsi', app: 'CAC', cond: () => true }
-      ],
-      '05': [
-        { code: 'C050221(A)', desc: 'Usia > 60 s.d 70 Thn', app: 'CAC', cond: (d) => d.usia > 60 && d.usia <= 70 },
-        { code: 'C050421(M)', desc: 'Profesi Berisiko', app: 'CAM', cond: () => true },
-        { code: 'C050721(A)', desc: 'Usia < 21 Thn', app: 'CAM', cond: (d) => d.usia < 21 }
-      ],
-      '06': [
-        { code: 'C060121(M)', desc: 'Red Area', app: 'CAM', cond: () => true },
-        { code: 'C060221(M)', desc: 'Cover Area Jauh', app: 'CAM', cond: () => true }
-      ],
-      '07': [
-        { code: 'C070121(A)', desc: 'NPWP Tidak Sesuai', app: 'CAC', cond: () => true },
-        { code: 'RD567(A)', desc: 'Pasangan Tidak TTD', app: 'CAC', cond: () => true }
-      ]
-    };
-
-    let addedDeviations = []; // Store { groupId, code, inputs }
+    const approvalHierarchy = ['CAC', 'CAM', 'CDH', 'CDDH', 'CADH', 'CRO', 'VPD', 'PD'];
 
     function updateDeviasiUI() {
       const status = getVal('dev_status');
@@ -900,163 +905,71 @@
       else $('dev_row_rating').classList.add('hidden');
     }
 
-    function addDeviasiField() {
-      const groupId = getVal('dev_group_select');
-      if (!groupId) return;
-      
-      // Check if group already added (limit 1 per group for simplicity? Or allow multiple? "tombol tambah jenis deviasi dan dropdown bertambah")
-      // User said: "jika dropdown sudah ditambahkan tidak akan muncul lagi". This implies unique selection.
-      // But user also said "tombol tambah jenis deviasi... dropdown bertambah".
-      // I will implement: You can add multiple groups, but a specific CODE cannot be added twice.
-      // Wait, if the dropdown is for GROUP, does "tidak muncul lagi" apply to GROUP or CODE?
-      // Usually Group is the category. You can have multiple deviations in one group (e.g. Kol 5 and Kol 2).
-      // But the prompt says "jika dropdown sudah ditambahkan tidak akan muncul lagi pada menu tambah dropdown".
-      // This phrasing is ambiguous. I will assume it means the specific LINE ITEM (Code) cannot be duplicated.
-      // However, since the first dropdown is Group, I will assume we add a Group section first.
-      
-      // Let's interpret: When I click "Add", I select Group. Then I select the specific Deviation.
-      // If I select "Kol 5", it adds to list. "Kol 5" option disappears.
-      
-      // To simplify UI:
-      // I will change the "Add" button to be a direct list of DEVIATIONS (long list) or Group then Deviation.
-      // Prompt: "di kategori terdapat dropdown beri tombol tambah jenis deviasi"
-      // I will generate the container for this group.
-      
-      const container = $('deviasi-container');
-      const div = document.createElement('div');
-      div.className = 'deviasi-item';
-      div.id = 'dev-item-' + Date.now();
-      
-      let options = '<option value="">Pilih Jenis Deviasi</option>';
-      
-      // Populate specific deviations for this group
-      if (groupId === '01') {
-         // Negative list needs dynamic inputs usually, but user asked for dropdown.
-         // I will list standard codes.
-         // However, Negative list depends on input (BD, Kol).
-         // "jika tidak memungkinkan membuat form gunakan saja dropdown".
-         // I will provide specific options like "C010124 - Kol 5 BD > 50 Jt".
-         devDB['01'].forEach(item => {
-            // Check if already added
-            if (!addedDeviations.find(a => a.code === item.code)) {
-              options += `<option value="${item.code}">${item.code} - ${item.desc}</option>`;
-            }
-         });
-      } else if (groupId === '02') {
-         // DSR
-         // Needs input? User said "input persen saja".
-         // But dropdown deviation? I will list DSR codes.
-         devDB['02'].forEach(item => {
-            if (!addedDeviations.find(a => a.code === item.code)) {
-              options += `<option value="${item.code}">${item.code} - ${item.desc}</option>`;
-            }
-         });
-      } else if (groupId === '03') {
-         // Skema Produk
-         devDB['03'].forEach(item => {
-            if (!addedDeviations.find(a => a.code === item.code)) {
-              options += `<option value="${item.code}">${item.code} - ${item.desc}</option>`;
-            }
-         });
+    // Helper Functions
+    function getNegListDev(kol, bd) {
+      bd = bd || 0;
+      if (kol == 5) {
+        if (bd > 50000000) return { code: 'C010124(M)', desc: 'Kol 5 BD > 50 Jt', app: 'CRO' };
+        if (bd > 30000000) return { code: 'C010224(M)', desc: 'Kol 5 BD 30-50 Jt', app: 'CADH' };
+        if (bd > 5000000) return { code: 'C010424(M)', desc: 'Kol 5 BD 5-30 Jt', app: 'CDDH' };
+        if (bd > 1000000) return { code: 'C010724(M)', desc: 'Kol 5 BD 1-5 Jt', app: 'CDH' };
+        return { code: 'C010924(M)', desc: 'Kol 5 BD <= 1 Jt', app: 'CAM' };
+      }
+      if (kol == 4) {
+        if (bd > 50000000) return { code: 'C010324(M)', desc: 'Kol 4 BD > 50 Jt', app: 'CADH' };
+        return { code: 'C010524(M)', desc: 'Kol 4 BD <= 50 Jt', app: 'CDDH' };
+      }
+      if (kol == 3) {
+        if (bd > 50000000) return { code: 'C010624(M)', desc: 'Kol 3 BD > 50 Jt', app: 'CDDH' };
+        if (bd > 5000000) return { code: 'C011024(M)', desc: 'Kol 3 BD 5-50 Jt', app: 'CAM' };
+        return { code: 'C011224(M)', desc: 'Kol 3 BD <= 5 Jt', app: 'CAC' };
+      }
+      if (kol == 2) {
+        if (bd > 50000000) return { code: 'C010824(M)', desc: 'Kol 2 BD > 50 Jt', app: 'CDH' };
+        if (bd > 5000000) return { code: 'C011124(M)', desc: 'Kol 2 BD 5-50 Jt', app: 'CAM' };
+        return { code: 'C011324(M)', desc: 'Kol 2 BD <= 5 Jt', app: 'CAC' };
+      }
+      return null;
+    }
+
+    function getDSRDev(dsr) {
+      if(dsr > 80) return { code: 'RD653(M)', desc: 'DSR > 80%', app: 'CDH' };
+      if(dsr > 65) return { code: 'C020422(A)', desc: 'DSR 65-80%', app: 'CAM' };
+      if(dsr > 55) return { code: 'C020222(A)', desc: 'DSR 30-55%', app: 'CAC' };
+      return null;
+    }
+
+    function getUsiaDev(usia) {
+      if(usia > 70) return { code: 'REJECT', desc: 'Usia > 70 Thn', app: 'REJECT' };
+      if(usia > 60) return { code: 'C050221(A)', desc: 'Usia > 60 s.d 70 Thn', app: 'CAC' };
+      if(usia < 21) return { code: 'C050721(A)', desc: 'Usia < 21 Thn', app: 'CAM' };
+      return null;
+    }
+
+    function getTenorDev(tenor, prod) {
+      if (prod === 'mobil') {
+        if (tenor > 48 && tenor <= 60) return { code: 'C030124(M)', desc: 'Tenor > 48-60 Bulan', app: 'CAC', note: 'Maks LTV 85%' };
       } else {
-         // Others
-         devDB[groupId].forEach(item => {
-            if (!addedDeviations.find(a => a.code === item.code)) {
-              options += `<option value="${item.code}">${item.code} - ${item.desc}</option>`;
-            }
-         });
+        // Motor / NB
+        if (tenor > 36 && tenor <= 48) return { code: 'C030121(M)', desc: 'Tenor 36-48 Bulan', app: 'CAC' };
+        if (tenor > 48 && tenor <= 60) return { code: 'C030125(M)', desc: 'Tenor > 48-60 Bulan', app: 'CAM' };
       }
-
-      const groupNames = {
-        '01': 'Negative List',
-        '02': 'DSR & Min Penghasilan',
-        '03': 'Skema Produk',
-        '04': 'Unit Pembiayaan',
-        '05': 'Profil Konsumen',
-        '06': 'Cover Area',
-        '07': 'Dokumen'
-      };
-
-      div.innerHTML = `
-        <div class="flex justify-between items-center mb-2">
-          <span class="font-semibold text-indigo-700 text-xs">${groupId} - ${groupNames[groupId]}</span>
-          <button onclick="removeDeviasi('${div.id}')" class="btn-remove">Hapus</button>
-        </div>
-        <select class="form-input deviasi-select" onchange="handleDeviasiSelect(this, '${groupId}')">${options}</select>
-        <div class="deviasi-inputs mt-2 space-y-2"></div>
-      `;
-      
-      container.appendChild(div);
-      $('dev_group_select').value = ""; // Reset main selector
-    }
-    
-    function handleDeviasiSelect(el, groupId) {
-      const code = el.value;
-      if (!code) return;
-      
-      const parent = el.closest('.deviasi-item');
-      const inputArea = parent.querySelector('.deviasi-inputs');
-      inputArea.innerHTML = ''; // Clear previous inputs
-      
-      // Add to tracking
-      addedDeviations.push({ id: parent.id, code: code, groupId: groupId });
-      
-      // Disable this option in other dropdowns?
-      // "jika dropdown sudah ditambahkan tidak akan muncul lagi"
-      document.querySelectorAll('.deviasi-select').forEach(sel => {
-         const opt = sel.querySelector(`option[value="${code}"]`);
-         if (opt) opt.remove();
-      });
-
-      // Add necessary inputs if needed for calculation/details
-      // For Negative List, we already chose specific code, so maybe no inputs needed?
-      // User said: "dropdown bertambah sesuai jenis deviasi... form berupa sesuai isi jenis deviasi".
-      // Example: If user picks "Take Over Fincoy", show "Current/Tidak Current" dropdown.
-      // If user picks "LTV Naik", show "LTV Input"?
-      
-      if (code === 'C031111(M)' || code === 'C030123(M)') {
-        inputArea.innerHTML = `
-          <div class="grid grid-cols-2 gap-2">
-             <select class="form-input text-xs" id="inp_${code}_type">
-               <option value="current">Current</option>
-               <option value="notcurrent">Tidak Current</option>
-             </select>
-          </div>
-        `;
-      } else if (code.startsWith('C030') && code.includes('LTV')) {
-         inputArea.innerHTML = `<input type="number" class="form-input text-xs" id="inp_${code}_ltv" placeholder="Masukkan LTV (%)">`;
-      }
+      return null;
     }
 
-    function removeDeviasi(id) {
-      const el = $(id);
-      // Restore option to other dropdowns? 
-      // Complex to manage perfectly in pure JS without re-rendering everything. 
-      // I'll just remove the element.
-      
-      // Find code to restore
-      const item = addedDeviations.find(a => a.id === id);
-      if (item) {
-        // Add option back to all dropdowns
-        const group = devDB[item.groupId].find(d => d.code === item.code);
-        if (group) {
-          document.querySelectorAll('.deviasi-select').forEach(sel => {
-             if (!sel.querySelector(`option[value="${item.code}"]`)) {
-                const opt = document.createElement('option');
-                opt.value = item.code;
-                opt.innerText = `${item.code} - ${group.desc}`;
-                sel.appendChild(opt);
-             }
-          });
-        }
-        addedDeviations = addedDeviations.filter(a => a.id !== id);
-      }
-      
-      el.remove();
+    function getLTVDev(ltv) {
+      if (ltv > 10) return { code: 'C030921(M)', desc: 'LTV Naik > 10%', app: 'CAM', note: 'Maks LTV >90% tdk dibiayai' };
+      if (ltv > 0) return { code: 'C030821(M)', desc: 'LTV Naik s.d 10%', app: 'CAC' };
+      return null;
+    }
+
+    function getTODev(to) {
+      if (to === 'current') return { code: 'C030123(M)', desc: 'Take Over Fincoy Current', app: 'CAC', note: 'Historikal < 9 bln' };
+      if (to === 'tidakcurrent') return { code: 'C031111(M)', desc: 'Take Over Fincoy Tidak Current', app: 'CAM', note: 'Historikal < 9 bln' };
+      return null;
     }
 
     function checkDeviasi() {
-      // Mandatory check
       const prod = getVal('dev_prod');
       const status = getVal('dev_status');
       if (!prod || !status) {
@@ -1065,45 +978,129 @@
       }
 
       let res = [];
-      let highestApp = 'CAC'; // Base
-      let hasReject = false;
+      let highestApp = 'CAC';
       let groupCount = new Set();
       let requireIM = false;
+      let hasReject = false;
 
-      const approvalHierarchy = ['CAC', 'CAM', 'CDH', 'CDDH', 'CADH', 'CRO', 'VPD', 'PD'];
-
-      // Process added deviations
-      addedDeviations.forEach(dev => {
-        groupCount.add(dev.groupId);
-        const data = devDB[dev.groupId].find(d => d.code === dev.code);
-        if (data) {
-          let detail = data.desc;
-          
-          // Dynamic details
-          if (dev.code.startsWith('C030') && dev.code.includes('LTV')) {
-            const ltvVal = $('inp_' + dev.code + '_ltv')?.value || '-';
-            detail += ` (${ltvVal}%)`;
-          }
-          
-          res.push({ 
-            t: data.app === 'CAC' ? 'pass' : 'warn', 
-            m: `<strong>[${dev.groupId}] ${data.code}</strong><br>${detail}<br>Approval: ${data.app}`,
-            app: data.app
-          });
-          
-          // Check hierarchy
-          if (approvalHierarchy.indexOf(data.app) > approvalHierarchy.indexOf(highestApp)) {
-            highestApp = data.app;
-          }
+      // 01 - Negative List
+      const kol = getVal('dev_kol');
+      const bd = parseNum(getVal('dev_bd'));
+      if (kol) {
+        const dev = getNegListDev(kol, bd);
+        if (dev) {
+          groupCount.add('01');
+          res.push({ t: dev.app === 'REJECT' ? 'fail' : (dev.app === 'CAC' ? 'pass' : 'warn'), m: `<strong>Negative List</strong><br>${dev.code} - ${dev.desc}<br>Wewenang: ${dev.app}` });
+          if (dev.app === 'REJECT') hasReject = true;
+          if (approvalHierarchy.indexOf(dev.app) > approvalHierarchy.indexOf(highestApp)) highestApp = dev.app;
         }
-      });
+      }
+
+      // 02 - DSR
+      const dsr = parseNum(getVal('dev_dsr'));
+      if (dsr > 0) {
+        const dev = getDSRDev(dsr);
+        if (dev) {
+          groupCount.add('02');
+          res.push({ t: dev.app === 'REJECT' ? 'fail' : (dev.app === 'CAC' ? 'pass' : 'warn'), m: `<strong>DSR & Min Penghasilan</strong><br>${dev.code} - ${dev.desc}<br>Wewenang: ${dev.app}` });
+          if (approvalHierarchy.indexOf(dev.app) > approvalHierarchy.indexOf(highestApp)) highestApp = dev.app;
+        }
+      }
+
+      // 03 - Skema Produk
+      let devs03 = [];
+      
+      // Tenor
+      const tenor = parseNum(getVal('dev_tenor'));
+      if (tenor > 0) {
+        const dev = getTenorDev(tenor, prod);
+        if (dev) devs03.push(dev);
+      }
+
+      // LTV
+      const ltv = parseNum(getVal('dev_ltv'));
+      if (ltv > 0) {
+        const dev = getLTVDev(ltv);
+        if (dev) devs03.push(dev);
+      }
+
+      // Take Over
+      const to = getVal('dev_to');
+      if (to) {
+        const dev = getTODev(to);
+        if (dev) devs03.push(dev);
+      }
+
+      if (devs03.length > 0) {
+        groupCount.add('03');
+        devs03.forEach(dev => {
+          let noteHtml = dev.note ? `<span class="dev-note">${dev.note}</span>` : '';
+          res.push({ t: dev.app === 'CAC' ? 'pass' : 'warn', m: `<strong>Skema Produk</strong><br>${dev.code} - ${dev.desc}<br>Wewenang: ${dev.app}${noteHtml}` });
+          if (approvalHierarchy.indexOf(dev.app) > approvalHierarchy.indexOf(highestApp)) highestApp = dev.app;
+        });
+      }
+
+      // 04 - Unit Pembiayaan
+      let devs04 = [];
+      if ($('dev_04_faktur').checked) devs04.push({ code: 'C040321(M)', desc: 'Faktur Tidak Ada', app: 'CAC' });
+      if ($('dev_04_unit').checked) devs04.push({ code: 'C040621(A/M)', desc: 'Unit Diluar Ketentuan', app: 'CAM' });
+      if ($('dev_04_kir').checked) devs04.push({ code: 'C040821(M)', desc: 'KIR Tidak Aktif', app: 'CAC' });
+      if ($('dev_04_plat').checked) devs04.push({ code: 'RD585(M)', desc: 'Plat Beda Provinsi', app: 'CAC', note: 'Wajib BBN atau LTV turun 5%' });
+      
+      if (devs04.length > 0) {
+        groupCount.add('04');
+        devs04.forEach(dev => {
+          let noteHtml = dev.note ? `<span class="dev-note">${dev.note}</span>` : '';
+          res.push({ t: dev.app === 'CAC' ? 'pass' : 'warn', m: `<strong>Unit Pembiayaan</strong><br>${dev.code} - ${dev.desc}<br>Wewenang: ${dev.app}${noteHtml}` });
+          if (approvalHierarchy.indexOf(dev.app) > approvalHierarchy.indexOf(highestApp)) highestApp = dev.app;
+        });
+      }
+
+      // 05 - Profil Konsumen
+      const usia = parseNum(getVal('dev_usia'));
+      if (usia > 0) {
+        const dev = getUsiaDev(usia);
+        if (dev) {
+          groupCount.add('05');
+          res.push({ t: dev.app === 'REJECT' ? 'fail' : (dev.app === 'CAC' ? 'pass' : 'warn'), m: `<strong>Profil Konsumen</strong><br>${dev.code} - ${dev.desc}<br>Wewenang: ${dev.app}` });
+          if (dev.app === 'REJECT') hasReject = true;
+          if (approvalHierarchy.indexOf(dev.app) > approvalHierarchy.indexOf(highestApp)) highestApp = dev.app;
+        }
+      }
+
+      // 06 - Cover Area
+      let devs06 = [];
+      if ($('dev_06_red').checked) devs06.push({ code: 'C060121(M)', desc: 'Red Area', app: 'CAM', note: 'Rekomendasi Collection wajib' });
+      if ($('dev_06_jauh').checked) devs06.push({ code: 'C060221(M)', desc: 'Cover Area Jauh', app: 'CAM', note: 'Jawa >70KM tidak dibiayai' });
+      
+      if (devs06.length > 0) {
+        groupCount.add('06');
+        devs06.forEach(dev => {
+          let noteHtml = dev.note ? `<span class="dev-note">${dev.note}</span>` : '';
+          res.push({ t: dev.app === 'CAC' ? 'pass' : 'warn', m: `<strong>Cover Area</strong><br>${dev.code} - ${dev.desc}<br>Wewenang: ${dev.app}${noteHtml}` });
+          if (approvalHierarchy.indexOf(dev.app) > approvalHierarchy.indexOf(highestApp)) highestApp = dev.app;
+        });
+      }
+
+      // 07 - Dokumen
+      let devs07 = [];
+      if ($('dev_07_npwp').checked) devs07.push({ code: 'C070121(A)', desc: 'NPWP Tidak Sesuai', app: 'CAC', note: 'PH > 50 Juta' });
+      if ($('dev_07_ttd').checked) devs07.push({ code: 'RD567(A)', desc: 'Pasangan Tidak TTD', app: 'CAC', note: 'Isi Form F-179' });
+      
+      if (devs07.length > 0) {
+        groupCount.add('07');
+        devs07.forEach(dev => {
+          let noteHtml = dev.note ? `<span class="dev-note">${dev.note}</span>` : '';
+          res.push({ t: dev.app === 'CAC' ? 'pass' : 'warn', m: `<strong>Dokumen</strong><br>${dev.code} - ${dev.desc}<br>Wewenang: ${dev.app}${noteHtml}` });
+          if (approvalHierarchy.indexOf(dev.app) > approvalHierarchy.indexOf(highestApp)) highestApp = dev.app;
+        });
+      }
 
       if (groupCount.size > 3) {
         requireIM = true;
         res.push({ t: 'warn', m: '<strong>PERINGATAN:</strong> Lebih dari 3 Group Deviasi. Wajib melampirkan IM Paper.' });
       }
 
-      // Determine status
       let statusRes = 'pass';
       if (hasReject) statusRes = 'fail';
       else if (highestApp !== 'CAC' || requireIM) statusRes = 'warn';
@@ -1113,27 +1110,17 @@
       renderResult('res-deviasi', res, statusRes);
     }
 
-
-    /* ===== SUPER LOGIC ===== */
+    /* ===== SUPER ===== */
     let superType = 'ro';
     function setSuperType(t) {
       superType = t;
-      // Reset buttons
       $('super-ro').className = "super-tab";
       $('super-to').className = "super-tab";
       $('super-nc').className = "super-tab";
-      
       $(t === 'ro' ? 'super-ro' : (t === 'to' ? 'super-to' : 'super-nc')).className = "super-tab active";
       
-      // Toggle fields
       $('row_to_specific').classList.toggle('hidden', t !== 'to');
-      $('sp_row_jenis_kons').classList.toggle('hidden', t !== 'to'); // Only TO has Jenis Konsumen (Terdaftar/Baru) logic in prompt
-      updateSuperUI();
-    }
-
-    function updateSuperUI() {
-       // RO & TO logic mostly similar for negative list, but specifics differ.
-       // NC Super logic?
+      $('sp_row_jenis_kons').classList.toggle('hidden', t !== 'to');
     }
 
     function checkSuper() {
@@ -1147,49 +1134,41 @@
       const tenor = parseNum(getVal('sp_tenor'));
       const jenisKend = getVal('sp_jenis');
       
-      // Common Checks
-      if (rating === 'warning' || rating === 'bad') { res.push({t: 'fail', m: 'SK Super: Rating Warning/Bad tidak dibiayai.'}); status='fail'; } else { res.push({t: 'pass', m: 'Rating Sesuai'}); }
-      if (getVal('sp_internal') === 'ya') { res.push({t: 'fail', m: 'SK Super: Internal Negative List.'}); status='fail'; } else { res.push({t: 'pass', m: 'Bebas Internal Neg List'}); }
-      if (getVal('sp_tbwo') === 'ya') { res.push({t: 'fail', m: 'SK Super: Riwayat TB/WO.'}); status='fail'; } else { res.push({t: 'pass', m: 'Bebas TB/WO'}); }
-      if (getVal('sp_kbij') === 'no') { res.push({t: 'fail', m: 'SK Super: KBIJ No tidak diperbolehkan.'}); status='fail'; } else { res.push({t: 'pass', m: 'KBIJ Sesuai'}); }
+      if (rating === 'warning' || rating === 'bad') { res.push({t: 'fail', m: 'Rating Warning/Bad tidak dibiayai.'}); status='fail'; }
+      if (getVal('sp_internal') === 'ya') { res.push({t: 'fail', m: 'Internal Negative List.'}); status='fail'; }
+      if (getVal('sp_tbwo') === 'ya') { res.push({t: 'fail', m: 'Riwayat TB/WO.'}); status='fail'; }
+      if (getVal('sp_kbij') === 'no') { res.push({t: 'fail', m: 'KBIJ No tidak diperbolehkan.'}); status='fail'; }
       
-      if (usia > 60) { res.push({t: 'fail', m: 'SK Super: Usia max 60 Thn.'}); status='fail'; } else { res.push({t: 'pass', m: 'Usia Sesuai'}); }
-      if (getVal('sp_rumah') === 'sewa') { res.push({t: 'fail', m: 'SK Super: Tidak boleh sewa.'}); status='fail'; } else { res.push({t: 'pass', m: 'Status Rumah Sesuai'}); }
-      if (exp > 250000000) { res.push({t: 'fail', m: 'SK Super: Max Exposure 250 Jt.'}); status='fail'; } else { res.push({t: 'pass', m: 'Exposure Sesuai'}); }
+      if (usia > 60) { res.push({t: 'fail', m: 'Usia max 60 Thn.'}); status='fail'; }
+      if (getVal('sp_rumah') === 'sewa') { res.push({t: 'fail', m: 'Tidak boleh sewa.'}); status='fail'; }
+      if (exp > 250000000) { res.push({t: 'fail', m: 'Max Exposure 250 Jt.'}); status='fail'; }
       
-      const maxIIR = superType === 'ro' ? 40 : 30; // TO is usually 30%
-      if (iir > maxIIR) { res.push({t: 'fail', m: 'SK Super: IIR ' + iir + '% > Max ' + maxIIR + '%.'}); status='fail'; } else { res.push({t: 'pass', m: 'IIR Sesuai'}); }
+      const maxIIR = superType === 'ro' ? 40 : 30;
+      if (iir > maxIIR) { res.push({t: 'fail', m: 'IIR > ' + maxIIR + '%.'}); status='fail'; }
 
       let maxAge = (superType === 'ro' && jenisKend === 'passenger') ? 17 : 10;
-      if (superType === 'to') maxAge = 10; // TO Passenger A is max 10 years.
-      if (usiaKend > maxAge) { res.push({t: 'fail', m: 'SK Super: Usia kendaraan > ' + maxAge + ' thn.'}); status='fail'; } else { res.push({t: 'pass', m: 'Usia Kendaraan Sesuai'}); }
+      if (superType === 'to') maxAge = 10;
+      if (usiaKend > maxAge) { res.push({t: 'fail', m: 'Usia kendaraan > ' + maxAge + ' thn.'}); status='fail'; }
 
-      if (tenor > 48) { res.push({t: 'warn', m: 'SK Super: Tenor > 48 = Deviasi.'}); if(status!=='fail')status='warn'; } else { res.push({t: 'pass', m: 'Tenor Sesuai'}); }
+      if (tenor > 48) { res.push({t: 'warn', m: 'Tenor > 48 = Deviasi.'}); if(status!=='fail')status='warn'; }
 
       if (superType === 'to') {
-        const bayar = parseNum(getVal('sp_to_bayar'));
-        if (bayar < 12) { res.push({t: 'fail', m: 'SK Super TO: Min 12 bln pembayaran.'}); status='fail'; } else { res.push({t: 'pass', m: 'Riwayat Pembayaran Sesuai'}); }
-        if (getVal('sp_to_od') !== 'kurang') { res.push({t: 'warn', m: 'SK Super TO: Overdue > 14 hari -> Deviasi.'}); if(status!=='fail')status='warn'; }
+        const jenisKons = getVal('sp_jenis_kons');
+        if (jenisKons === 'baru') { res.push({t: 'fail', m: 'Konsumen Baru tidak diperbolehkan.'}); status='fail'; }
+        if (parseNum(getVal('sp_to_bayar')) < 12) { res.push({t: 'fail', m: 'Min 12 bln pembayaran.'}); status='fail'; }
+        if (getVal('sp_to_od') !== 'kurang') { res.push({t: 'warn', m: 'Overdue > 14 hari = Deviasi.'}); if(status!=='fail')status='warn'; }
         
-        const appLevel = exp > 75000000 ? 'CMG' : 'CAC'; // Assuming CMG is same as CAM or higher branch manager? SK says "CMG". I'll keep it.
+        const appLevel = exp > 75000000 ? 'CMG' : 'CAC';
         res.push({t: 'warn', m: '<strong>Approval Level: ' + appLevel + '</strong>'});
       }
       
-      // BPKB & STNK Check
-      if (getVal('sp_stnk') === 'mati') {
-         res.push({t: 'warn', m: 'STNK Mati: Wajib perpanjangan (potong pencairan).'});
-         if(status!=='fail')status='warn';
-      }
-      
-      if (getVal('sp_bpkb') === 'oranglain') {
-         res.push({t: 'warn', m: 'BPKB Orang Lain: Wajib BBN (potong pencairan).'});
-         if(status!=='fail')status='warn';
-      }
+      if (getVal('sp_stnk') === 'mati') { res.push({t: 'warn', m: 'STNK Mati: Wajib perpanjangan.'}); if(status!=='fail')status='warn'; }
+      if (getVal('sp_bpkb') === 'oranglain') { res.push({t: 'warn', m: 'BPKB Orang Lain: Wajib BBN.'}); if(status!=='fail')status='warn'; }
 
       renderResult('res-super', res, status);
     }
 
-    /* ===== RENDER HELPER ===== */
+    /* ===== RENDER ===== */
     function renderResult(containerId, items, globalStatus) {
       const container = $(containerId); let html = '';
       let statusClass = 'status-warn'; let statusText = 'Layak dengan Catatan'; let icon = '!';
@@ -1199,13 +1178,13 @@
       html += '<div class="space-y-1">';
       items.forEach(item => {
         const i = item.t === 'pass' ? '<span class="text-green-500 font-bold">✓</span>' : (item.t === 'fail' ? '<span class="text-red-500 font-bold">✗</span>' : '<span class="text-amber-500 font-bold">!</span>');
-        html += '<div class="result-item"><div class="w-5 flex-shrink-0">' + i + '</div><span class="text-slate-600 text-xs">' + item.m + '</span></div>';
+        html += '<div class="result-item"><div class="w-5 flex-shrink-0">' + i + '</div><div class="text-slate-600 text-xs">' + item.m + '</div></div>';
       });
       html += '</div>';
       container.innerHTML = html;
     }
 
-    // Initialize
+    // Init
     updateNorkilUI();
     updateDeviasiUI();
     setSuperType('ro');

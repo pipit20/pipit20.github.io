@@ -1114,37 +1114,40 @@
     let superType = 'ro';
     function setSuperType(t) {
       superType = t;
-      $('super-ro').className = "super-tab";
-      $('super-to').className = "super-tab";
-      $('super-nc').className = "super-tab";
+      $('super-ro').className = "super-tab"; $('super-to').className = "super-tab"; $('super-nc').className = "super-tab";
       $(t === 'ro' ? 'super-ro' : (t === 'to' ? 'super-to' : 'super-nc')).className = "super-tab active";
-      
       $('row_to_specific').classList.toggle('hidden', t !== 'to');
       $('sp_row_jenis_kons').classList.toggle('hidden', t !== 'to');
     }
 
     function checkSuper() {
-      let res = []; let status = 'pass'; 
+      let res = [], status = 'pass'; 
       
-      const rating = getVal('sp_rating');
-      const exp = parseNum(getVal('sp_exp'));
-      const usia = parseNum(getVal('sp_usia'));
-      const usiaKend = parseNum(getVal('sp_usia_kend'));
-      const iir = parseNum(getVal('sp_iir'));
-      const tenor = parseNum(getVal('sp_tenor'));
-      const jenisKend = getVal('sp_jenis');
+      const rating = getVal('sp_rating'), exp = parseNum(getVal('sp_exp')), usia = parseNum(getVal('sp_usia')), usiaKend = parseNum(getVal('sp_usia_kend')), iir = parseNum(getVal('sp_iir')), tenor = parseNum(getVal('sp_tenor')), jenisKend = getVal('sp_jenis');
+      const ltv = parseNum(getVal('sp_ltv')); // Added LTV check variable
       
       if (rating === 'warning' || rating === 'bad') { res.push({t: 'fail', m: 'Rating Warning/Bad tidak dibiayai.'}); status='fail'; }
       if (getVal('sp_internal') === 'ya') { res.push({t: 'fail', m: 'Internal Negative List.'}); status='fail'; }
       if (getVal('sp_tbwo') === 'ya') { res.push({t: 'fail', m: 'Riwayat TB/WO.'}); status='fail'; }
       if (getVal('sp_kbij') === 'no') { res.push({t: 'fail', m: 'KBIJ No tidak diperbolehkan.'}); status='fail'; }
-      
       if (usia > 60) { res.push({t: 'fail', m: 'Usia max 60 Thn.'}); status='fail'; }
       if (getVal('sp_rumah') === 'sewa') { res.push({t: 'fail', m: 'Tidak boleh sewa.'}); status='fail'; }
       if (exp > 250000000) { res.push({t: 'fail', m: 'Max Exposure 250 Jt.'}); status='fail'; }
       
       const maxIIR = superType === 'ro' ? 40 : 30;
-      if (iir > maxIIR) { res.push({t: 'fail', m: 'IIR > ' + maxIIR + '%.'}); status='fail'; }
+      if (iir > maxIIR) { res.push({t: 'fail', m: 'IIR ' + iir + '% > Max ' + maxIIR + '%.'}); status='fail'; }
+
+      // LTV Check (SK MobilKu Super - Passenger A Max 95%)
+      if (jenisKend === 'passenger' && ltv > 95) { 
+        res.push({t: 'warn', m: 'LTV > 95% (Deviasi)'}); 
+        if(status!=='fail')status='warn'; 
+      } else if (jenisKend === 'commercial' && ltv > 80) { 
+        // Assuming standard Commercial limit if not specified in Super SK
+        res.push({t: 'warn', m: 'LTV Commercial > 80% (Cek Ketentuan)'}); 
+        if(status!=='fail')status='warn'; 
+      } else {
+        res.push({t: 'pass', m: 'LTV Sesuai Ketentuan Super'});
+      }
 
       let maxAge = (superType === 'ro' && jenisKend === 'passenger') ? 17 : 10;
       if (superType === 'to') maxAge = 10;

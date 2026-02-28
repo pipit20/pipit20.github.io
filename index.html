@@ -2848,21 +2848,6 @@
         html += '</ul></div></div>';
       }
 
-      const catOrder = ['Dokumen', 'Negative List', 'Data Konsumen', 'Keuangan', 'Kendaraan', 'Take Over', 'NC Super', 'RO Super'];
-      const sortedCats = Object.keys(results.categories).sort((a, b) => catOrder.indexOf(a) - catOrder.indexOf(b));
-      sortedCats.forEach(cat => {
-        const items = results.categories[cat];
-        const hasFail = items.some(i => i.t === 'fail');
-        const hasWarn = items.some(i => i.t === 'warn');
-        const headerClass = hasFail ? 'invalid' : (hasWarn ? 'warn' : 'valid');
-        html += `<div class="result-group"><div class="result-header ${headerClass}">${cat}</div><div class="result-body">`;
-        items.forEach(item => {
-          const msg = item.m.replace(/<[^>]*>/g, '');
-          html += `<div class="result-row"><div class="res-icon ${item.t === 'pass' ? 'pass' : (item.t === 'fail' ? 'fail' : 'warn')}">${item.t === 'pass' ? 'OK' : (item.t === 'fail' ? 'X' : '!')}</div><div class="res-text">${msg}</div></div>`;
-        });
-        html += '</div></div>';
-      });
-
       html += '</div>';
       container.innerHTML = html;
     }

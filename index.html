@@ -5,102 +5,650 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WOM Finance - Dompet Kredit</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .main-bg { background: linear-gradient(135deg, #f1f5f9 0%, #e0e7ff 50%, #ede9fe 100%); min-height: 100vh; }
-    .card { background: white; border-radius: 1.25rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); border: 1px solid rgba(255,255,255,0.6); }
-    .form-input { width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.75rem; background: #f8fafc; transition: all 0.2s; font-size: 0.875rem; color: #334155; }
-    .form-input:focus { border-color: #6366f1; background: white; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15); outline: none; }
-    .form-input.error { border-color: #ef4444; background: #fef2f2; }
-    .nav-tab { padding: 0.75rem 1.25rem; font-weight: 600; font-size: 0.875rem; border-radius: 0.75rem; transition: all 0.3s; color: #64748b; border: 1px solid transparent; background: transparent; cursor: pointer; }
-    .nav-tab:hover { background: rgba(255,255,255,0.6); color: #4f46e5; }
-    .nav-tab.active { background: white; color: #4f46e5; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border-color: #e0e7ff; }
-    .btn-check { background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 0.75rem; border: none; cursor: pointer; box-shadow: 0 4px 11px rgba(99, 102, 241, 0.3); transition: all 0.2s; }
-    .btn-check:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4); }
-    .prod-item { padding: 1rem; border: 2px solid #e2e8f0; border-radius: 1rem; cursor: pointer; transition: all 0.2s; background: white; text-align: center; }
-    .prod-item:hover { border-color: #a5b4fc; }
-    .prod-item.active { border-color: #6366f1; background: #eef2ff; box-shadow: 0 4px 10px rgba(99, 102, 241, 0.1); }
-    .page-section { display: none; animation: fadeIn 0.4s ease; }
+    :root {
+      --bg-base: #f8fafc;
+      --bg-gradient-start: #f0fdfa;
+      --bg-gradient-mid: #ecfeff;
+      --bg-gradient-end: #fefce8;
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --card-border: rgba(148, 163, 184, 0.15);
+      --accent-primary: #0d9488;
+      --accent-primary-dark: #0f766e;
+      --accent-gold: #d97706;
+      --accent-gold-light: #fbbf24;
+      --accent-coral: #f43f5e;
+      --accent-emerald: #10b981;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --shadow-card: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
+      --shadow-card-hover: 0 20px 50px -15px rgba(0, 0, 0, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+    
+    body { 
+      font-family: 'Plus Jakarta Sans', sans-serif; 
+      background: var(--bg-base);
+      color: var(--text-primary);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .font-display { font-family: 'Space Grotesk', sans-serif; }
+
+    /* Animated Mesh Background */
+    .bg-mesh {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .mesh-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.6;
+      animation: drift 25s ease-in-out infinite alternate;
+    }
+
+    .blob-1 {
+      width: 500px;
+      height: 500px;
+      background: linear-gradient(135deg, #99f6e4 0%, #5eead4 100%);
+      top: -150px;
+      left: -100px;
+      animation-delay: 0s;
+    }
+
+    .blob-2 {
+      width: 400px;
+      height: 400px;
+      background: linear-gradient(135deg, #fef08a 0%, #fde047 100%);
+      bottom: -100px;
+      right: -50px;
+      animation-delay: -8s;
+    }
+
+    .blob-3 {
+      width: 350px;
+      height: 350px;
+      background: linear-gradient(135deg, #a5f3fc 0%, #67e8f9 100%);
+      top: 40%;
+      left: 60%;
+      animation-delay: -15s;
+    }
+
+    .blob-4 {
+      width: 300px;
+      height: 300px;
+      background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
+      top: 20%;
+      right: 20%;
+      animation-delay: -20s;
+      opacity: 0.4;
+    }
+
+    @keyframes drift {
+      0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+      50% { transform: translate(30px, 20px) rotate(5deg) scale(1.05); }
+      100% { transform: translate(-20px, -10px) rotate(-5deg) scale(0.95); }
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: 1.25rem;
+      box-shadow: var(--shadow-card);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-gold));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .card:hover::before { opacity: 1; }
+
+    .card:hover {
+      box-shadow: var(--shadow-card-hover);
+      transform: translateY(-4px);
+      border-color: rgba(13, 148, 136, 0.2);
+    }
+
+    /* Form Inputs */
+    .form-input {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 0.75rem;
+      background: #ffffff;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      transition: all 0.25s;
+    }
+
+    .form-input:focus {
+      border-color: var(--accent-primary);
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.1);
+      outline: none;
+    }
+
+    .form-input::placeholder { color: var(--text-muted); }
+
+    .form-input option {
+      background: #ffffff;
+      color: var(--text-primary);
+    }
+
+    /* Navigation Tabs */
+    .nav-container {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(148, 163, 184, 0.1);
+      border-radius: 1rem;
+      padding: 0.375rem;
+      box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-tab {
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+      border-radius: 0.75rem;
+      transition: all 0.3s;
+      color: var(--text-secondary);
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .nav-tab:hover { 
+      color: var(--accent-primary); 
+      background: rgba(13, 148, 136, 0.05);
+    }
+
+    .nav-tab.active {
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-primary-dark));
+      color: white;
+      box-shadow: 0 4px 15px -3px rgba(13, 148, 136, 0.4);
+    }
+
+    /* Primary Button */
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-light) 100%);
+      color: #ffffff;
+      font-weight: 700;
+      padding: 1rem 2.5rem;
+      border-radius: 0.875rem;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 15px -3px rgba(217, 119, 6, 0.5);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px -5px rgba(217, 119, 6, 0.6);
+    }
+
+    .btn-primary:active { transform: translateY(-1px); }
+
+    /* Product Items */
+    .prod-item {
+      padding: 1.25rem 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: #ffffff;
+      text-align: center;
+      position: relative;
+    }
+
+    .prod-item:hover {
+      border-color: var(--accent-primary);
+      background: rgba(13, 148, 136, 0.02);
+    }
+
+    .prod-item.active {
+      border-color: var(--accent-primary);
+      background: linear-gradient(135deg, rgba(13, 148, 136, 0.08), rgba(13, 148, 136, 0.02));
+      box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.1);
+    }
+
+    .prod-item.active .prod-title { color: var(--accent-primary); }
+
+    /* Section Title */
+    .section-title {
+      font-weight: 700;
+      font-size: 0.75rem;
+      color: var(--accent-primary);
+      border-left: 3px solid var(--accent-primary);
+      padding-left: 0.875rem;
+      margin-bottom: 1.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .section-title.gold { border-color: var(--accent-gold); color: var(--accent-gold); }
+    .section-title.coral { border-color: var(--accent-coral); color: var(--accent-coral); }
+    .section-title.emerald { border-color: var(--accent-emerald); color: var(--accent-emerald); }
+
+    /* Page Animation */
+    .page-section { display: none; animation: fadeSlideIn 0.5s ease; }
     .page-section.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Rupiah Input */
     .rp-wrap { position: relative; }
-    .rp-pre { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #64748b; font-weight: 500; font-size: 0.875rem; pointer-events: none; }
-    .rp-inp { padding-left: 2.5rem !important; }
-    .section-title { font-weight: 700; font-size: 0.8rem; color: #475569; border-left: 4px solid #6366f1; padding-left: 0.75rem; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
-    .section-title.teal { border-color: #14b8a6; }
-    .section-title.cyan { border-color: #06b6d4; }
-    .section-title.rose { border-color: #f43f5e; }
-    .section-title.amber { border-color: #f59e0b; }
-    
-    /* Result Organization */
-    .result-group { background: #fafafa; border: 1px solid #e5e7eb; border-radius: 0.75rem; margin-bottom: 0.75rem; overflow: hidden; }
-    .result-header { padding: 0.5rem 0.75rem; font-weight: 700; font-size: 0.75rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid #e5e7eb; }
-    .result-header.valid { background: #dcfce7; color: #166534; }
-    .result-header.invalid { background: #fee2e2; color: #991b1b; }
-    .result-header.warn { background: #fef3c7; color: #92400e; }
-    .result-header.neutral { background: #f1f5f9; color: #475569; }
-    .result-body { padding: 0.5rem 0.75rem; }
-    .result-row { display: flex; align-items: flex-start; gap: 0.5rem; padding: 0.35rem 0; font-size: 0.75rem; border-bottom: 1px dashed #f1f5f9; }
+    .rp-pre {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--accent-gold);
+      font-weight: 700;
+      font-size: 0.875rem;
+      pointer-events: none;
+    }
+    .rp-inp { padding-left: 2.75rem !important; }
+
+    /* Result Cards */
+    .result-group {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      border-radius: 1rem;
+      margin-bottom: 0.875rem;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+
+    .result-group:hover {
+      border-color: rgba(13, 148, 136, 0.2);
+      box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.05);
+    }
+
+    .result-header {
+      padding: 0.75rem 1.25rem;
+      font-weight: 700;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    }
+
+    .result-header.valid {
+      background: linear-gradient(90deg, rgba(16, 185, 129, 0.1), transparent);
+      color: var(--accent-emerald);
+    }
+
+    .result-header.invalid {
+      background: linear-gradient(90deg, rgba(244, 63, 94, 0.1), transparent);
+      color: var(--accent-coral);
+    }
+
+    .result-header.warn {
+      background: linear-gradient(90deg, rgba(217, 119, 6, 0.1), transparent);
+      color: var(--accent-gold);
+    }
+
+    .result-body { padding: 1rem 1.25rem; }
+
+    .result-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.625rem;
+      padding: 0.5rem 0;
+      font-size: 0.85rem;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.06);
+    }
+
     .result-row:last-child { border-bottom: none; }
-    .res-icon { width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.6rem; font-weight: bold; margin-top: 1px; }
-    .res-icon.pass { background: #dcfce7; color: #166534; }
-    .res-icon.fail { background: #fee2e2; color: #991b1b; }
-    .res-icon.warn { background: #fef3c7; color: #92400e; }
-    .res-text { flex: 1; color: #374151; }
-    
-    .status-badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; }
-    .status-pass { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-    .status-fail { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
-    .status-warn { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+
+    .res-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 0.65rem;
+      font-weight: 800;
+      margin-top: 1px;
+    }
+
+    .res-icon.pass { background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); }
+    .res-icon.fail { background: rgba(244, 63, 94, 0.15); color: var(--accent-coral); }
+    .res-icon.warn { background: rgba(217, 119, 6, 0.15); color: var(--accent-gold); }
+
+    .res-text { flex: 1; color: var(--text-secondary); }
+
+    /* Status Badge */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 9999px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+    }
+
+    .status-pass {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05));
+      color: var(--accent-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .status-fail {
+      background: linear-gradient(135deg, rgba(244, 63, 94, 0.15), rgba(244, 63, 94, 0.05));
+      color: var(--accent-coral);
+      border: 1px solid rgba(244, 63, 94, 0.2);
+    }
+
+    .status-warn {
+      background: linear-gradient(135deg, rgba(217, 119, 6, 0.15), rgba(217, 119, 6, 0.05));
+      color: var(--accent-gold);
+      border: 1px solid rgba(217, 119, 6, 0.2);
+    }
+
     .hidden { display: none !important; }
-    .custom-check { display: flex; align-items: flex-start; gap: 0.5rem; cursor: pointer; font-size: 0.8rem; color: #475569; margin-bottom: 0.5rem; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; transition: all 0.2s; }
-    .custom-check:hover { border-color: #a5b4fc; }
-    .custom-check input { width: 1rem; height: 1rem; accent-color: #6366f1; cursor: pointer; margin-top: 0.15rem; flex-shrink: 0; }
-    
-    /* Deviasi styling */
-    .dev-cat-box { background: #fafafa; border: 1px solid #e5e7eb; border-radius: 0.75rem; margin-bottom: 1rem; overflow: hidden; }
-    .dev-cat-header { background: linear-gradient(90deg, #f1f5f9 0%, #f8fafc 100%); padding: 0.75rem 1rem; border-bottom: 1px solid #e5e7eb; }
-    .dev-cat-title { font-weight: 700; font-size: 0.85rem; color: #374151; display: flex; align-items: center; gap: 0.5rem; }
-    .dev-cat-badge { background: #6366f1; color: white; padding: 0.125rem 0.5rem; border-radius: 0.25rem; font-size: 0.7rem; }
-    .dev-cat-body { padding: 1rem; }
-    .dev-note { background: #f0f9ff; color: #0369a1; padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-size: 0.65rem; margin-top: 0.15rem; display: inline-block; border: 1px solid #bae6fd; }
-    
-    .super-tab { padding: 0.5rem 1rem; font-weight: 600; font-size: 0.75rem; border-radius: 0.5rem; cursor: pointer; transition: all 0.2s; }
-    .super-tab.active { background: #6366f1; color: white; }
-    .super-tab:not(.active) { background: #f1f5f9; color: #64748b; }
 
-    .dev-approval-badge { padding: 0.125rem 0.5rem; border-radius: 0.25rem; font-size: 0.65rem; font-weight: 700; }
-    .app-cac { background: #dbeafe; color: #1e40af; }
-    .app-cam { background: #e0e7ff; color: #3730a3; }
-    .app-cdh { background: #fae8ff; color: #86198f; }
-    .app-cddh { background: #fce7f3; color: #9d174d; }
-    .app-cadh { background: #ffe4e6; color: #9f1239; }
-    .app-cro { background: #fecaca; color: #991b1b; }
-    .app-reject { background: #fee2e2; color: #991b1b; }
-    .final-approval-box { background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; padding: 1rem; border-radius: 0.75rem; text-align: center; margin-top: 1rem; }
-    .final-approval-level { font-size: 1.5rem; font-weight: 800; }
-    .final-approval-note { font-size: 0.7rem; opacity: 0.9; margin-top: 0.25rem; }
+    /* Custom Checkbox */
+    .custom-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+      padding: 0.875rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 0.875rem;
+      transition: all 0.2s;
+      background: rgba(255, 255, 255, 0.8);
+    }
 
-    .empty-state { text-align: center; padding: 2rem 1rem; color: #94a3b8; }
-    .empty-state svg { width: 48px; height: 48px; margin: 0 auto 0.5rem; }
+    .custom-check:hover {
+      border-color: var(--accent-primary);
+      background: rgba(13, 148, 136, 0.02);
+    }
+
+    .custom-check input {
+      width: 1.25rem;
+      height: 1.25rem;
+      accent-color: var(--accent-primary);
+      cursor: pointer;
+      margin-top: 0.1rem;
+      flex-shrink: 0;
+    }
+
+    /* Deviasi Category Box */
+    .dev-cat-box {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      border-radius: 1rem;
+      margin-bottom: 1.25rem;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+
+    .dev-cat-box:hover { 
+      border-color: rgba(13, 148, 136, 0.2);
+      box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.05);
+    }
+
+    .dev-cat-header {
+      background: linear-gradient(90deg, rgba(13, 148, 136, 0.08), rgba(255, 255, 255, 0.5));
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    }
+
+    .dev-cat-title {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+    }
+
+    .dev-cat-badge {
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-primary-dark));
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .dev-cat-body { padding: 1.25rem 1.5rem; }
+
+    .dev-note {
+      background: rgba(13, 148, 136, 0.08);
+      color: var(--accent-primary);
+      padding: 0.25rem 0.625rem;
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      display: inline-block;
+      border: 1px solid rgba(13, 148, 136, 0.1);
+    }
+
+    /* Super Tab */
+    .super-tab {
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      font-size: 0.85rem;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+    }
+
+    .super-tab.active {
+      background: linear-gradient(135deg, rgba(13, 148, 136, 0.1), rgba(13, 148, 136, 0.02));
+      color: var(--accent-primary);
+      border-color: var(--accent-primary);
+    }
+
+    .super-tab:not(.active) {
+      background: transparent;
+      color: var(--text-muted);
+    }
+
+    .super-tab:not(.active):hover {
+      background: rgba(13, 148, 136, 0.05);
+      color: var(--text-secondary);
+    }
+
+    /* Deviasi Approval Badge */
+    .dev-approval-badge {
+      padding: 0.375rem 0.75rem;
+      border-radius: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .app-cac { background: rgba(16, 185, 129, 0.15); color: #059669; }
+    .app-cam { background: rgba(13, 148, 136, 0.15); color: var(--accent-primary); }
+    .app-cdh { background: rgba(139, 92, 246, 0.15); color: #7c3aed; }
+    .app-cddh { background: rgba(236, 72, 153, 0.15); color: #db2777; }
+    .app-cadh { background: rgba(217, 119, 6, 0.15); color: var(--accent-gold); }
+    .app-cro { background: rgba(244, 63, 94, 0.15); color: var(--accent-coral); }
+    .app-reject { background: rgba(239, 68, 68, 0.15); color: #dc2626; }
+
+    /* Final Approval Box */
+    .final-approval-box {
+      background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-primary-dark) 100%);
+      color: white;
+      padding: 1.75rem;
+      border-radius: 1rem;
+      text-align: center;
+      margin-top: 1.25rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px -5px rgba(13, 148, 136, 0.4);
+    }
+
+    .final-approval-box::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .final-approval-level {
+      font-size: 2.25rem;
+      font-weight: 800;
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: -0.02em;
+    }
+
+    .final-approval-note {
+      font-size: 0.8rem;
+      opacity: 0.85;
+      margin-top: 0.375rem;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      color: var(--text-muted);
+    }
+
+    .empty-state svg {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1rem;
+      opacity: 0.4;
+      color: var(--accent-primary);
+    }
+
+    /* Labels */
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    /* Logo styling */
+    .logo-img {
+      height: 4rem;
+      width: auto;
+      object-fit: contain;
+      transition: all 0.3s;
+    }
+
+    .logo-img:hover { transform: scale(1.05); }
+
+    /* Header */
+    .main-header {
+      background: rgba(131, 214, 194, 0.936);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    }
+
+    /* Info Box */
+    .info-box {
+      background: linear-gradient(135deg, rgba(13, 148, 136, 0.05), rgba(217, 119, 6, 0.03));
+      border: 1px solid rgba(13, 148, 136, 0.15);
+      border-radius: 1rem;
+      padding: 1.5rem;
+    }
+
+    /* Result Container */
+    .result-container {
+      border: 1px solid rgba(13, 148, 136, 0.2);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .mesh-blob { opacity: 0.4; }
+      .final-approval-level { font-size: 1.75rem; }
+      .nav-tab { padding: 0.625rem 1rem; font-size: 0.8rem; }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .mesh-blob, .page-section { animation: none; }
+      * { transition-duration: 0.01ms !important; }
+    }
   </style>
 </head>
-<body class="main-bg text-slate-700">
+<body>
+  <!-- Animated Background -->
+  <div class="bg-mesh">
+    <div class="mesh-blob blob-1"></div>
+    <div class="mesh-blob blob-2"></div>
+    <div class="mesh-blob blob-3"></div>
+    <div class="mesh-blob blob-4"></div>
+  </div>
 
   <!-- Header -->
-  <header class="sticky top-0 z-50 backdrop-blur-lg bg-white/40 border-b border-white/50">
+  <header class="main-header sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
-      <div class="flex items-center flex-wrap justify-center md:justify-start gap-2 sm:gap-3">
-        <img src="womfinance.png" alt="WOM Finance" class="h-10 w-auto object-contain">
+      <div class="flex items-center flex-wrap justify-center md:justify-start gap-3 sm:gap-4">
+        <img src="womfinance.png" alt="WOM Finance" class="logo-img">
         <div class="text-center sm:text-left">
-          <h1 class="font-bold text-lg text-slate-800">Dompet Kredit</h1>
-          <p class="text-xs text-slate-500">Credit Eligibility Checker</p>
+          <h1 class="font-display font-bold text-xl text-white">Dompet Kredit</h1>
+          <p class="text-xs text-white">Credit Eligibility Checker</p>
         </div>
-        <img src="womjatim.png" alt="WOM Jatim" class="h-10 w-auto object-contain">
-        <img src="cream.png" alt="Cream" class="h-10 w-auto object-contain">
+        <img src="womjatim.png" alt="WOM Jatim" class="logo-img">
+        <img src="cream.png" alt="Cream" class="logo-img">
       </div>
-      <nav class="flex gap-2 p-1 bg-white/50 rounded-xl backdrop-blur-sm border border-white/50">
+      <nav class="nav-container">
         <button onclick="navigatePage('norkil')" id="btn-norkil" class="nav-tab active">Normal Kilat</button>
         <button onclick="navigatePage('deviasi')" id="btn-deviasi" class="nav-tab">Deviasi</button>
         <button onclick="navigatePage('super')" id="btn-super" class="nav-tab">MobilKu Super</button>
@@ -108,29 +656,47 @@
     </div>
   </header>
 
-  <!-- Main -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+  <!-- Main Content -->
+  <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-8">
 
-    <!-- ================= NORMAL KILAT PAGE ================= -->
+    <!-- NORMAL KILAT PAGE -->
     <section id="page-norkil" class="page-section active">
       <div class="grid grid-cols-12 gap-6">
-        <div class="col-span-12 lg:col-span-8 space-y-5">
-          <div class="card p-5">
+        <div class="col-span-12 lg:col-span-8 space-y-6">
+          
+          <!-- Product Selection -->
+          <div class="card p-6">
             <h3 class="section-title">Pilih Produk Pembiayaan</h3>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div id="prod-mobilku" onclick="selectProduct('mobilku')" class="prod-item active"><div class="font-bold text-indigo-700">MobilKu</div><div class="text-xs text-slate-500 mt-1">SK 186</div></div>
-              <div id="prod-motorku" onclick="selectProduct('motorku')" class="prod-item"><div class="font-bold text-teal-700">MotorKu</div><div class="text-xs text-slate-500 mt-1">SK 167</div></div>
-              <div id="prod-newbike_bpjs" onclick="selectProduct('newbike_bpjs')" class="prod-item"><div class="font-bold text-cyan-700">NewBike BPJS</div><div class="text-xs text-slate-500 mt-1">SK 156</div></div>
-              <div id="prod-newbike_nonbpjs" onclick="selectProduct('newbike_nonbpjs')" class="prod-item"><div class="font-bold text-rose-700">NewBike Non-BPJS</div><div class="text-xs text-slate-500 mt-1">SK 155</div></div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div id="prod-mobilku" onclick="selectProduct('mobilku')" class="prod-item active">
+                <div class="prod-title font-display font-bold text-lg text-[var(--accent-primary)]">MobilKu</div>
+                <div class="text-xs text-[var(--text-muted)] mt-1">SK 186</div>
+              </div>
+              <div id="prod-motorku" onclick="selectProduct('motorku')" class="prod-item">
+                <div class="prod-title font-display font-bold text-lg text-[#0891b2]">MotorKu</div>
+                <div class="text-xs text-[var(--text-muted)] mt-1">SK 167</div>
+              </div>
+              <div id="prod-newbike_bpjs" onclick="selectProduct('newbike_bpjs')" class="prod-item">
+                <div class="prod-title font-display font-bold text-lg text-[var(--accent-emerald)]">NewBike BPJS</div>
+                <div class="text-xs text-[var(--text-muted)] mt-1">SK 156</div>
+              </div>
+              <div id="prod-newbike_nonbpjs" onclick="selectProduct('newbike_nonbpjs')" class="prod-item">
+                <div class="prod-title font-display font-bold text-lg text-[var(--accent-coral)]">NewBike Non-BPJS</div>
+                <div class="text-xs text-[var(--text-muted)] mt-1">SK 155</div>
+              </div>
             </div>
           </div>
-          <div class="card p-5">
-            <div class="space-y-5">
+
+          <!-- Form Card -->
+          <div class="card p-6">
+            <div class="space-y-6">
+              
+              <!-- Data Konsumen -->
               <div>
                 <h3 class="section-title">Data Konsumen</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Status Konsumen *</label>
+                    <label>Status Konsumen *</label>
                     <select id="nk_status" class="form-input" onchange="updateNorkilUI()">
                       <option value="">-- Pilih --</option>
                       <option value="baru">Konsumen Baru</option>
@@ -138,7 +704,7 @@
                     </select>
                   </div>
                   <div id="row_rating" class="hidden">
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Rating *</label>
+                    <label>Rating *</label>
                     <select id="nk_rating" class="form-input">
                       <option value="">-- Pilih --</option>
                       <option value="excellent">Excellent</option>
@@ -147,7 +713,7 @@
                     </select>
                   </div>
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Lama Kerja *</label>
+                    <label>Lama Kerja *</label>
                     <select id="nk_lama_kerja" class="form-input">
                       <option value="">-- Pilih --</option>
                       <option value="kurang">Kurang dari 1 Tahun</option>
@@ -156,7 +722,7 @@
                     </select>
                   </div>
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Status Rumah *</label>
+                    <label>Status Rumah *</label>
                     <select id="nk_rumah" class="form-input" onchange="updateNorkilUI()">
                       <option value="">-- Pilih --</option>
                       <option value="sendiri">Milik Sendiri/Keluarga</option>
@@ -164,11 +730,11 @@
                     </select>
                   </div>
                   <div id="row_lama_tinggal" class="hidden">
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Lama Tinggal (Bulan) *</label>
+                    <label>Lama Tinggal (Bulan) *</label>
                     <input type="number" id="nk_lama_tinggal" class="form-input" placeholder="Jumlah bulan">
                   </div>
                   <div id="row_region" class="hidden">
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Region *</label>
+                    <label>Region *</label>
                     <select id="nk_region" class="form-input">
                       <option value="">-- Pilih --</option>
                       <option value="lainnya">Lainnya</option>
@@ -187,11 +753,12 @@
                 </div>
               </div>
 
+              <!-- Hasil Pengecekan Data -->
               <div>
-                <h3 class="section-title teal">Hasil Pengecekan Data</h3>
+                <h3 class="section-title emerald">Hasil Pengecekan Data</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                   <div id="row_dukcapil" class="hidden">
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Dukcapil *</label>
+                    <label>Dukcapil *</label>
                     <select id="nk_dukcapil" class="form-input">
                       <option value="">-- Pilih --</option>
                       <option value="match">Match</option>
@@ -199,7 +766,7 @@
                     </select>
                   </div>
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">KBIJ Pemohon *</label>
+                    <label>KBIJ Pemohon *</label>
                     <select id="nk_kbij" class="form-input" onchange="updateNorkilUI()">
                       <option value="">-- Pilih --</option>
                       <option value="yes">Yes</option>
@@ -208,7 +775,7 @@
                     </select>
                   </div>
                   <div id="row_kbij_pas">
-                    <label class="block text-xs font-medium text-slate-600 mb-1">KBIJ Pasangan *</label>
+                    <label>KBIJ Pasangan *</label>
                     <select id="nk_kbij_pas" class="form-input">
                       <option value="">-- Pilih --</option>
                       <option value="yes">Yes</option>
@@ -218,7 +785,7 @@
                     </select>
                   </div>
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Internal Neg List *</label>
+                    <label>Internal Neg List *</label>
                     <select id="nk_internal" class="form-input">
                       <option value="">-- Pilih --</option>
                       <option value="tidak">Tidak Termasuk</option>
@@ -226,7 +793,7 @@
                     </select>
                   </div>
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Riwayat TB/WO *</label>
+                    <label>Riwayat TB/WO *</label>
                     <select id="nk_tbwo" class="form-input">
                       <option value="">-- Pilih --</option>
                       <option value="tidak">Tidak Pernah</option>
@@ -236,11 +803,12 @@
                 </div>
               </div>
 
+              <!-- BPJS -->
               <div id="row_bpjs" class="hidden">
-                <h3 class="section-title cyan">Pengecekan BPJS</h3>
+                <h3 class="section-title emerald">Pengecekan BPJS</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Status BPJS *</label>
+                    <label>Status BPJS *</label>
                     <select id="nk_bpjs_status" class="form-input">
                       <option value="">-- Pilih --</option>
                       <option value="terdaftar">Terdaftar</option>
@@ -248,7 +816,7 @@
                     </select>
                   </div>
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Validasi Penghasilan JMO *</label>
+                    <label>Validasi Penghasilan JMO *</label>
                     <select id="nk_bpjs_income" class="form-input">
                       <option value="">-- Pilih --</option>
                       <option value="ya">Ya (Tervalidasi)</option>
@@ -258,11 +826,12 @@
                 </div>
               </div>
 
+              <!-- Keuangan -->
               <div>
-                <h3 class="section-title cyan">Keuangan</h3>
+                <h3 class="section-title gold">Keuangan</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Jenis Penghasilan *</label>
+                    <label>Jenis Penghasilan *</label>
                     <select id="nk_jenis_inc" class="form-input">
                       <option value="">-- Pilih --</option>
                       <option value="fixed">Fixed Income</option>
@@ -270,40 +839,41 @@
                     </select>
                   </div>
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Total Exposure *</label>
+                    <label>Total Exposure *</label>
                     <div class="rp-wrap">
                       <span class="rp-pre">Rp</span>
                       <input type="text" id="nk_exp" class="form-input rp-inp" oninput="formatRupiah(this)" placeholder="0">
                     </div>
                   </div>
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Tenor (Bulan) *</label>
+                    <label>Tenor (Bulan) *</label>
                     <input type="number" id="nk_tenor" class="form-input" placeholder="Contoh: 36">
                   </div>
                   <div id="row_iir">
-                    <label class="block text-xs font-medium text-slate-600 mb-1">IIR (%) *</label>
+                    <label>IIR (%) *</label>
                     <input type="number" id="nk_iir" class="form-input" placeholder="Contoh: 30">
                   </div>
                   <div id="row_dp_perc" class="hidden">
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Down Payment (%) *</label>
+                    <label>Down Payment (%) *</label>
                     <input type="number" id="nk_dp_perc" class="form-input" placeholder="Contoh: 20">
                   </div>
                   <div id="row_ltv" class="hidden">
-                    <label class="block text-xs font-medium text-slate-600 mb-1">LTV (%) *</label>
+                    <label>LTV (%) *</label>
                     <input type="number" id="nk_ltv" class="form-input" placeholder="Contoh: 80">
                   </div>
                   <div id="row_max_ltv_info" class="hidden">
-                    <label class="block text-xs font-medium text-slate-500 mb-1">Max LTV (SK)</label>
-                    <div id="max_ltv_display" class="form-input bg-slate-100 text-slate-600 font-semibold border-transparent">-</div>
+                    <label>Max LTV (SK)</label>
+                    <div id="max_ltv_display" class="form-input bg-gradient-to-r from-[rgba(13,148,136,0.1)] to-transparent text-[var(--accent-primary)] font-bold border-[var(--accent-primary)]">-</div>
                   </div>
                 </div>
               </div>
 
+              <!-- Data Kendaraan -->
               <div id="row_kendaraan">
-                <h3 class="section-title rose">Data Kendaraan</h3>
+                <h3 class="section-title coral">Data Kendaraan</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                   <div id="row_jenis_kend" class="hidden">
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Jenis Kendaraan *</label>
+                    <label>Jenis Kendaraan *</label>
                     <select id="nk_jenis_kend" class="form-input" onchange="updateNorkilUI()">
                       <option value="">-- Pilih --</option>
                       <option value="passenger">Passenger Car</option>
@@ -311,7 +881,7 @@
                     </select>
                   </div>
                   <div id="row_kategori_kend" class="hidden">
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Kategori *</label>
+                    <label>Kategori *</label>
                     <select id="nk_kategori" class="form-input" onchange="updateNorkilUI()">
                       <option value="">-- Pilih --</option>
                       <option value="A">Kategori A</option>
@@ -320,11 +890,11 @@
                     </select>
                   </div>
                   <div id="row_usia_kend" class="hidden">
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Usia Kendaraan (Tahun) *</label>
+                    <label>Usia Kendaraan (Tahun) *</label>
                     <input type="number" id="nk_usia_kend" class="form-input" placeholder="5" onchange="updateNorkilUI()">
                   </div>
                   <div id="row_bpkb" class="hidden">
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Kepemilikan BPKB *</label>
+                    <label>Kepemilikan BPKB *</label>
                     <select id="nk_bpkb" class="form-input" onchange="updateNorkilUI()">
                       <option value="">-- Pilih --</option>
                       <option value="sendiri">Sendiri/Pasangan/Ortu</option>
@@ -332,7 +902,7 @@
                     </select>
                   </div>
                   <div id="row_pajak" class="hidden">
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Pajak Kendaraan *</label>
+                    <label>Pajak Kendaraan *</label>
                     <select id="nk_pajak" class="form-input">
                       <option value="">-- Pilih --</option>
                       <option value="hidup">Hidup/Aktif</option>
@@ -342,44 +912,51 @@
                 </div>
               </div>
 
+              <!-- Dokumen -->
               <div>
-                <h3 class="section-title amber">Dokumen Persyaratan</h3>
-                <div id="doc_check_container" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <!-- Dokumen akan dirender dinamis -->
-                </div>
+                <h3 class="section-title">Dokumen Persyaratan</h3>
+                <div id="doc_check_container" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
               </div>
 
+              <!-- Submit Button -->
               <div class="pt-4 flex justify-end">
-                <button onclick="checkNorkil()" class="btn-check">Cek Kelayakan</button>
+                <button onclick="checkNorkil()" class="btn-primary">Cek Kelayakan</button>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- Result Panel -->
         <div class="col-span-12 lg:col-span-4">
           <div class="sticky top-28">
-            <div class="card p-5 bg-white/90 backdrop-blur-sm border-indigo-100">
+            <div class="card p-6 result-container">
               <h3 class="section-title">Hasil Analisa</h3>
-              <div id="res-norkil" class="empty-state"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg><p class="text-sm">Isi semua form untuk memulai analisa</p></div>
+              <div id="res-norkil" class="empty-state">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                </svg>
+                <p class="text-sm font-medium">Isi semua form untuk memulai analisa</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ================= DEVIASI PAGE ================= -->
+    <!-- DEVIASI PAGE -->
     <section id="page-deviasi" class="page-section">
       <div class="grid grid-cols-12 gap-6">
-        <div class="col-span-12 lg:col-span-8 space-y-5">
-          <div class="card p-5">
-            <div class="mb-4">
-              <h2 class="text-lg font-bold text-slate-800">Pendeteksi Deviasi</h2>
-              <p class="text-sm text-slate-500">Isi form atau centang jenis deviasi yang terjadi. Kosongkan jika tidak ada.</p>
+        <div class="col-span-12 lg:col-span-8 space-y-6">
+          <div class="card p-6">
+            <div class="mb-6">
+              <h2 class="font-display text-xl font-bold text-[var(--text-primary)]">Pendeteksi Deviasi</h2>
+              <p class="text-sm text-[var(--text-muted)] mt-1">Isi form atau centang jenis deviasi yang terjadi. Kosongkan jika tidak ada.</p>
             </div>
             
             <!-- Info Produk & Status -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5 p-4 bg-indigo-50 rounded-xl">
+            <div class="info-box mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label class="block text-xs font-medium text-slate-600 mb-1">Jenis Produk *</label>
+                <label>Jenis Produk *</label>
                 <select id="dev_prod" class="form-input" onchange="updateDeviasiUI()">
                   <option value="motor">MotorKu / NB</option>
                   <option value="mobil">MobilKu</option>
@@ -387,14 +964,14 @@
                 </select>
               </div>
               <div>
-                <label class="block text-xs font-medium text-slate-600 mb-1">Status Konsumen *</label>
+                <label>Status Konsumen *</label>
                 <select id="dev_status" class="form-input" onchange="updateDeviasiUI()">
                   <option value="baru">Baru</option>
                   <option value="terdaftar">Terdaftar</option>
                 </select>
               </div>
               <div id="dev_row_rating" class="hidden">
-                <label class="block text-xs font-medium text-slate-600 mb-1">Rating Internal</label>
+                <label>Rating Internal</label>
                 <select id="dev_rating" class="form-input">
                   <option value="none">Normal / Baru</option>
                   <option value="excellent">Excellent</option>
@@ -403,7 +980,7 @@
               </div>
             </div>
 
-            <!-- 01 - Negative List -->
+            <!-- Deviasi Categories -->
             <div class="dev-cat-box">
               <div class="dev-cat-header">
                 <span class="dev-cat-title"><span class="dev-cat-badge">01</span> NEGATIVE LIST</span>
@@ -411,7 +988,7 @@
               <div class="dev-cat-body">
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Kolektibilitas (Kol)</label>
+                    <label>Kolektibilitas (Kol)</label>
                     <select id="dev_kol" class="form-input">
                       <option value="">-- Tidak Ada Deviasi --</option>
                       <option value="2">Kol 2</option>
@@ -421,7 +998,7 @@
                     </select>
                   </div>
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Baki Debet (Rp)</label>
+                    <label>Baki Debet (Rp)</label>
                     <div class="rp-wrap">
                       <span class="rp-pre">Rp</span>
                       <input type="text" id="dev_bd" class="form-input rp-inp" oninput="formatRupiah(this)" placeholder="0">
@@ -431,7 +1008,6 @@
               </div>
             </div>
 
-            <!-- 02 - DSR -->
             <div class="dev-cat-box">
               <div class="dev-cat-header">
                 <span class="dev-cat-title"><span class="dev-cat-badge">02</span> DSR & MIN PENGHASILAN</span>
@@ -439,14 +1015,13 @@
               <div class="dev-cat-body">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">DSR (%)</label>
+                    <label>DSR (%)</label>
                     <input type="number" id="dev_dsr" class="form-input" placeholder="Contoh: 70">
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- 03 - Skema Produk -->
             <div class="dev-cat-box">
               <div class="dev-cat-header">
                 <span class="dev-cat-title"><span class="dev-cat-badge">03</span> SKEMA PRODUK PEMBIAYAAN</span>
@@ -454,15 +1029,15 @@
               <div class="dev-cat-body space-y-4">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Tenor (Bulan)</label>
+                    <label>Tenor (Bulan)</label>
                     <input type="number" id="dev_tenor" class="form-input" placeholder="Contoh: 50">
                   </div>
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Kenaikan LTV (%)</label>
+                    <label>Kenaikan LTV (%)</label>
                     <input type="number" id="dev_ltv" class="form-input" placeholder="Contoh: 5">
                   </div>
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Take Over Fincoy</label>
+                    <label>Take Over Fincoy</label>
                     <select id="dev_to" class="form-input">
                       <option value="">-- Tidak Ada --</option>
                       <option value="current">Current</option>
@@ -473,7 +1048,6 @@
               </div>
             </div>
 
-            <!-- 04 - Unit Pembiayaan -->
             <div class="dev-cat-box">
               <div class="dev-cat-header">
                 <span class="dev-cat-title"><span class="dev-cat-badge">04</span> UNIT PEMBIAYAAN (AGUNAN)</span>
@@ -481,24 +1055,23 @@
               <div class="dev-cat-body grid grid-cols-1 md:grid-cols-2 gap-x-4">
                 <label class="custom-check">
                   <input type="checkbox" id="dev_04_faktur">
-                  <div><span class="font-medium">Faktur Tidak Ada</span><div class="text-xs text-slate-500">C040321(M) - CAC</div></div>
+                  <div><span class="font-semibold text-[var(--text-primary)]">Faktur Tidak Ada</span><div class="text-xs text-[var(--text-muted)]">C040321(M) - CAC</div></div>
                 </label>
                 <label class="custom-check">
                   <input type="checkbox" id="dev_04_unit">
-                  <div><span class="font-medium">Unit Diluar Ketentuan</span><div class="text-xs text-slate-500">C040621(A/M) - CAM</div></div>
+                  <div><span class="font-semibold text-[var(--text-primary)]">Unit Diluar Ketentuan</span><div class="text-xs text-[var(--text-muted)]">C040621(A/M) - CAM</div></div>
                 </label>
                 <label class="custom-check">
                   <input type="checkbox" id="dev_04_kir">
-                  <div><span class="font-medium">KIR Tidak Aktif</span><div class="text-xs text-slate-500">C040821(M) - CAC</div></div>
+                  <div><span class="font-semibold text-[var(--text-primary)]">KIR Tidak Aktif</span><div class="text-xs text-[var(--text-muted)]">C040821(M) - CAC</div></div>
                 </label>
                 <label class="custom-check">
                   <input type="checkbox" id="dev_04_plat">
-                  <div><span class="font-medium">Plat Beda Provinsi</span><div class="text-xs text-slate-500">RD585(M) - CAC</div><span class="dev-note">Wajib BBN atau LTV turun 5%</span></div>
+                  <div><span class="font-semibold text-[var(--text-primary)]">Plat Beda Provinsi</span><div class="text-xs text-[var(--text-muted)]">RD585(M) - CAC</div><span class="dev-note">Wajib BBN atau LTV turun 5%</span></div>
                 </label>
               </div>
             </div>
 
-            <!-- 05 - Profil Konsumen -->
             <div class="dev-cat-box">
               <div class="dev-cat-header">
                 <span class="dev-cat-title"><span class="dev-cat-badge">05</span> PROFIL KONSUMEN</span>
@@ -506,14 +1079,13 @@
               <div class="dev-cat-body">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Usia Pemohon (Tahun)</label>
+                    <label>Usia Pemohon (Tahun)</label>
                     <input type="number" id="dev_usia" class="form-input" placeholder="Contoh: 65">
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- 06 - Cover Area -->
             <div class="dev-cat-box">
               <div class="dev-cat-header">
                 <span class="dev-cat-title"><span class="dev-cat-badge">06</span> COVER AREA & RED AREA</span>
@@ -521,16 +1093,15 @@
               <div class="dev-cat-body grid grid-cols-1 md:grid-cols-2 gap-x-4">
                 <label class="custom-check">
                   <input type="checkbox" id="dev_06_red">
-                  <div><span class="font-medium">Red Area</span><div class="text-xs text-slate-500">C060121(M) - CAM</div><span class="dev-note">Rekomendasi Collection wajib</span></div>
+                  <div><span class="font-semibold text-[var(--text-primary)]">Red Area</span><div class="text-xs text-[var(--text-muted)]">C060121(M) - CAM</div><span class="dev-note">Rekomendasi Collection wajib</span></div>
                 </label>
                 <label class="custom-check">
                   <input type="checkbox" id="dev_06_jauh">
-                  <div><span class="font-medium">Cover Area Jauh</span><div class="text-xs text-slate-500">C060221(M) - CAM</div><span class="dev-note">Jawa >70KM tidak dibiayai</span></div>
+                  <div><span class="font-semibold text-[var(--text-primary)]">Cover Area Jauh</span><div class="text-xs text-[var(--text-muted)]">C060221(M) - CAM</div><span class="dev-note">Jawa >70KM tidak dibiayai</span></div>
                 </label>
               </div>
             </div>
 
-            <!-- 07 - Dokumen -->
             <div class="dev-cat-box">
               <div class="dev-cat-header">
                 <span class="dev-cat-title"><span class="dev-cat-badge">07</span> DOKUMEN PEMBIAYAAN</span>
@@ -538,54 +1109,62 @@
               <div class="dev-cat-body grid grid-cols-1 md:grid-cols-2 gap-x-4">
                 <label class="custom-check">
                   <input type="checkbox" id="dev_07_npwp">
-                  <div><span class="font-medium">NPWP Tidak Sesuai</span><div class="text-xs text-slate-500">C070121(A) - CAC</div><span class="dev-note">PH > 50 Juta</span></div>
+                  <div><span class="font-semibold text-[var(--text-primary)]">NPWP Tidak Sesuai</span><div class="text-xs text-[var(--text-muted)]">C070121(A) - CAC</div><span class="dev-note">PH > 50 Juta</span></div>
                 </label>
                 <label class="custom-check">
                   <input type="checkbox" id="dev_07_ttd">
-                  <div><span class="font-medium">Pasangan Tidak TTD</span><div class="text-xs text-slate-500">RD567(A) - CAC</div><span class="dev-note">Isi Form F-179</span></div>
+                  <div><span class="font-semibold text-[var(--text-primary)]">Pasangan Tidak TTD</span><div class="text-xs text-[var(--text-muted)]">RD567(A) - CAC</div><span class="dev-note">Isi Form F-179</span></div>
                 </label>
               </div>
             </div>
 
             <div class="pt-4 flex justify-end">
-              <button onclick="checkDeviasi()" class="btn-check">Cek Level Approval</button>
+              <button onclick="checkDeviasi()" class="btn-primary">Cek Level Approval</button>
             </div>
           </div>
         </div>
+
+        <!-- Deviasi Result Panel -->
         <div class="col-span-12 lg:col-span-4">
           <div class="sticky top-28">
-            <div class="card p-5 bg-white/90 backdrop-blur-sm border-teal-100">
-              <h3 class="section-title">Hasil Deteksi Deviasi</h3>
-              <div id="res-deviasi" class="empty-state"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg><p class="text-sm">Menunggu input</p></div>
+            <div class="card p-6 result-container">
+              <h3 class="section-title emerald">Hasil Deteksi Deviasi</h3>
+              <div id="res-deviasi" class="empty-state">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+                <p class="text-sm font-medium">Menunggu input</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ================= SUPER PAGE ================= -->
+    <!-- SUPER PAGE -->
     <section id="page-super" class="page-section">
       <div class="grid grid-cols-12 gap-6">
-        <div class="col-span-12 lg:col-span-8 space-y-5">
-          <div class="card p-5">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-5 border-b pb-4 gap-3">
+        <div class="col-span-12 lg:col-span-8 space-y-6">
+          <div class="card p-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b border-[rgba(148,163,184,0.15)] pb-4 gap-3">
               <div>
-                <h2 class="text-lg font-bold text-slate-800">MobilKu Super</h2>
-                <p class="text-xs text-slate-500">Program Khusus</p>
+                <h2 class="font-display text-xl font-bold text-[var(--text-primary)]">MobilKu Super</h2>
+                <p class="text-xs text-[var(--text-muted)]">Program Khusus</p>
               </div>
-              <div class="flex bg-slate-100 rounded-lg p-1">
+              <div class="flex bg-[#f1f5f9] rounded-xl p-1">
                 <button id="super-ro" onclick="setSuperType('ro')" class="super-tab active">RO Super</button>
                 <button id="super-to" onclick="setSuperType('to')" class="super-tab">Take Over</button>
                 <button id="super-nc" onclick="setSuperType('nc')" class="super-tab">NC Super</button>
               </div>
             </div>
 
-            <div class="space-y-5">
+            <div class="space-y-6">
+              <!-- Data Konsumen -->
               <div>
                 <h3 class="section-title">Data Konsumen</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                   <div id="sp_row_jenis_kons" class="hidden">
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Jenis Konsumen *</label>
+                    <label>Jenis Konsumen *</label>
                     <select id="sp_jenis_kons" class="form-input">
                       <option value="">-- Pilih --</option>
                       <option value="terdaftar">Konsumen Terdaftar</option>
@@ -593,7 +1172,7 @@
                     </select>
                   </div>
                   <div id="sp_row_rating_super">
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Rating Konsumen *</label>
+                    <label>Rating Konsumen *</label>
                     <select id="sp_rating" class="form-input">
                       <option value="">-- Pilih --</option>
                       <option value="excellent">Excellent</option>
@@ -604,11 +1183,11 @@
                     </select>
                   </div>
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Usia Pemohon *</label>
+                    <label>Usia Pemohon *</label>
                     <input type="number" id="sp_usia" class="form-input" placeholder="Tahun">
                   </div>
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Jenis Pekerjaan *</label>
+                    <label>Jenis Pekerjaan *</label>
                     <select id="sp_kerja" class="form-input">
                       <option value="">-- Pilih --</option>
                       <option value="karyawan">Karyawan</option>
@@ -616,7 +1195,7 @@
                     </select>
                   </div>
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Status Rumah *</label>
+                    <label>Status Rumah *</label>
                     <select id="sp_rumah" class="form-input">
                       <option value="">-- Pilih --</option>
                       <option value="milik">Milik Sendiri/Keluarga</option>
@@ -626,11 +1205,12 @@
                 </div>
               </div>
 
+              <!-- Negative List -->
               <div>
-                <h3 class="section-title teal">Pengecekan Negative List</h3>
+                <h3 class="section-title coral">Pengecekan Negative List</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">KBIJ Pemohon *</label>
+                    <label>KBIJ Pemohon *</label>
                     <select id="sp_kbij" class="form-input">
                       <option value="">-- Pilih --</option>
                       <option value="yes">Yes</option>
@@ -639,7 +1219,7 @@
                     </select>
                   </div>
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Internal Neg List *</label>
+                    <label>Internal Neg List *</label>
                     <select id="sp_internal" class="form-input">
                       <option value="">-- Pilih --</option>
                       <option value="tidak">Tidak Termasuk</option>
@@ -647,7 +1227,7 @@
                     </select>
                   </div>
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Riwayat TB/WO *</label>
+                    <label>Riwayat TB/WO *</label>
                     <select id="sp_tbwo" class="form-input">
                       <option value="">-- Pilih --</option>
                       <option value="tidak">Tidak Pernah</option>
@@ -657,39 +1237,41 @@
                 </div>
               </div>
 
+              <!-- Keuangan -->
               <div>
-                <h3 class="section-title cyan">Keuangan</h3>
+                <h3 class="section-title gold">Keuangan</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">IIR (%) *</label>
+                    <label>IIR (%) *</label>
                     <input type="number" id="sp_iir" class="form-input" placeholder="30">
-                    <div id="sp_iir_note" class="text-xs text-slate-500 mt-1">Max: 40% (RO)</div>
+                    <div id="sp_iir_note" class="text-xs text-[var(--text-muted)] mt-1">Max: 40% (RO)</div>
                   </div>
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Maksimal LTV (%) *</label>
+                    <label>Maksimal LTV (%) *</label>
                     <input type="number" id="sp_ltv" class="form-input" placeholder="90">
-                    <div id="sp_ltv_note" class="text-xs text-slate-500 mt-1">Max: 90%</div>
+                    <div id="sp_ltv_note" class="text-xs text-[var(--text-muted)] mt-1">Max: 90%</div>
                   </div>
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Tenor (Bulan) *</label>
+                    <label>Tenor (Bulan) *</label>
                     <input type="number" id="sp_tenor" class="form-input" placeholder="48">
                   </div>
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Total Exposure *</label>
+                    <label>Total Exposure *</label>
                     <div class="rp-wrap">
                       <span class="rp-pre">Rp</span>
                       <input type="text" id="sp_exp" class="form-input rp-inp" oninput="formatRupiah(this)">
                     </div>
-                    <div class="text-xs text-slate-500 mt-1">Max: Rp 250.000.000</div>
+                    <div class="text-xs text-[var(--text-muted)] mt-1">Max: Rp 250.000.000</div>
                   </div>
                 </div>
               </div>
 
+              <!-- Data Kendaraan -->
               <div>
-                <h3 class="section-title rose">Data Kendaraan</h3>
+                <h3 class="section-title coral">Data Kendaraan</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Jenis Kendaraan *</label>
+                    <label>Jenis Kendaraan *</label>
                     <select id="sp_jenis" class="form-input" onchange="updateSuperUI()">
                       <option value="">-- Pilih --</option>
                       <option value="passenger">Passenger</option>
@@ -697,12 +1279,12 @@
                     </select>
                   </div>
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Usia Kendaraan (Tahun) *</label>
+                    <label>Usia Kendaraan (Tahun) *</label>
                     <input type="number" id="sp_usia_kend" class="form-input" placeholder="5">
-                    <div id="sp_usia_note" class="text-xs text-slate-500 mt-1">Max: 17 tahun (RO Passenger)</div>
+                    <div id="sp_usia_note" class="text-xs text-[var(--text-muted)] mt-1">Max: 17 tahun (RO Passenger)</div>
                   </div>
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Kepemilikan BPKB *</label>
+                    <label>Kepemilikan BPKB *</label>
                     <select id="sp_bpkb" class="form-input">
                       <option value="">-- Pilih --</option>
                       <option value="sendiri">Sendiri/Pasangan/Ortu</option>
@@ -710,7 +1292,7 @@
                     </select>
                   </div>
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Status STNK *</label>
+                    <label>Status STNK *</label>
                     <select id="sp_stnk" class="form-input">
                       <option value="">-- Pilih --</option>
                       <option value="hidup">Hidup</option>
@@ -720,15 +1302,16 @@
                 </div>
               </div>
 
+              <!-- TO Specific -->
               <div id="row_to_specific" class="hidden">
-                <h3 class="section-title amber">Data Take Over</h3>
+                <h3 class="section-title">Data Take Over</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Angsuran Dibayar (Bulan) *</label>
+                    <label>Angsuran Dibayar (Bulan) *</label>
                     <input type="number" id="sp_to_bayar" class="form-input" placeholder="12">
                   </div>
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Maksimal Overdue *</label>
+                    <label>Maksimal Overdue *</label>
                     <select id="sp_to_od" class="form-input">
                       <option value="">-- Pilih --</option>
                       <option value="kurang">Kurang dari 14 Hari</option>
@@ -738,11 +1321,12 @@
                 </div>
               </div>
 
+              <!-- NC Specific -->
               <div id="row_nc_specific" class="hidden">
-                <h3 class="section-title amber">Data NC Super</h3>
+                <h3 class="section-title">Data NC Super</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">Survey Vertel *</label>
+                    <label>Survey Vertel *</label>
                     <select id="sp_nc_vertel" class="form-input">
                       <option value="">-- Pilih --</option>
                       <option value="ya">Sudah Dilakukan</option>
@@ -752,24 +1336,30 @@
                 </div>
               </div>
 
+              <!-- Dokumen -->
               <div>
                 <h3 class="section-title">Dokumen Pembiayaan</h3>
-                <div id="doc_super_container" class="grid grid-cols-2 gap-3">
-                  <!-- Rendered dinamis -->
-                </div>
+                <div id="doc_super_container" class="grid grid-cols-2 gap-3"></div>
               </div>
 
               <div class="pt-4 flex justify-end">
-                <button onclick="checkSuper()" class="btn-check">Cek Kelayakan Super</button>
+                <button onclick="checkSuper()" class="btn-primary">Cek Kelayakan Super</button>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- Super Result Panel -->
         <div class="col-span-12 lg:col-span-4">
           <div class="sticky top-28">
-            <div class="card p-5 bg-white/90 backdrop-blur-sm border-rose-100">
-              <h3 class="section-title">Hasil Evaluasi</h3>
-              <div id="res-super" class="empty-state"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg><p class="text-sm">Isi semua form untuk memulai evaluasi</p></div>
+            <div class="card p-6 result-container">
+              <h3 class="section-title coral">Hasil Evaluasi</h3>
+              <div id="res-super" class="empty-state">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                </svg>
+                <p class="text-sm font-medium">Isi semua form untuk memulai evaluasi</p>
+              </div>
             </div>
           </div>
         </div>
@@ -781,8 +1371,14 @@
   <script>
     /* ===== UTILITIES ===== */
     const $ = (id) => document.getElementById(id);
-    const formatRupiah = (input) => { let value = input.value.replace(/\D/g, ''); input.value = new Intl.NumberFormat('id-ID').format(value); };
-    const parseNum = (str) => { if (!str) return 0; return parseInt(str.toString().replace(/\D/g, ''), 10) || 0; };
+    const formatRupiah = (input) => { 
+      let value = input.value.replace(/\D/g, ''); 
+      input.value = new Intl.NumberFormat('id-ID').format(value); 
+    };
+    const parseNum = (str) => { 
+      if (!str) return 0; 
+      return parseInt(str.toString().replace(/\D/g, ''), 10) || 0; 
+    };
     const getVal = (id) => $(id) ? $(id).value : '';
     const formatCurr = (num) => 'Rp ' + new Intl.NumberFormat('id-ID').format(num);
 
@@ -839,7 +1435,7 @@
       container.innerHTML = docs.map(doc => `
         <label class="custom-check">
           <input type="checkbox" id="${doc.id}">
-          <div><span class="font-medium">${doc.label}</span>${doc.mandatory ? '<span class="text-red-500 text-xs ml-1">*</span>' : ''}</div>
+          <div><span class="font-semibold text-[var(--text-primary)]">${doc.label}</span>${doc.mandatory ? '<span class="text-[var(--accent-coral)] text-xs ml-1">*</span>' : ''}</div>
         </label>
       `).join('');
     }
@@ -1156,7 +1752,6 @@
       let groupCount = new Set();
       let hasReject = false;
 
-      // 01 - Negative List
       const kol = getVal('dev_kol');
       const bd = parseNum(getVal('dev_bd'));
       if (kol) {
@@ -1164,14 +1759,12 @@
         if (dev) { groupCount.add('01'); dev.group = '01 - Negative List'; deviasiList.push(dev); if (dev.app === 'REJECT') hasReject = true; }
       }
 
-      // 02 - DSR
       const dsr = parseNum(getVal('dev_dsr'));
       if (dsr > 0) {
         const dev = getDSRDev(dsr);
         if (dev) { groupCount.add('02'); dev.group = '02 - DSR & Min Penghasilan'; deviasiList.push(dev); }
       }
 
-      // 03 - Skema Produk
       const tenor = parseNum(getVal('dev_tenor'));
       if (tenor > 0) {
         const dev = getTenorDev(tenor, prod);
@@ -1188,24 +1781,20 @@
         if (dev) { groupCount.add('03'); dev.group = '03 - Skema Produk'; deviasiList.push(dev); }
       }
 
-      // 04 - Unit Pembiayaan
       if ($('dev_04_faktur').checked) { groupCount.add('04'); deviasiList.push({ code: 'C040321(M)', desc: 'Faktur Tidak Ada', app: 'CAC', group: '04 - Unit Pembiayaan' }); }
       if ($('dev_04_unit').checked) { groupCount.add('04'); deviasiList.push({ code: 'C040621(A/M)', desc: 'Unit Diluar Ketentuan', app: 'CAM', group: '04 - Unit Pembiayaan' }); }
       if ($('dev_04_kir').checked) { groupCount.add('04'); deviasiList.push({ code: 'C040821(M)', desc: 'KIR Tidak Aktif', app: 'CAC', group: '04 - Unit Pembiayaan' }); }
       if ($('dev_04_plat').checked) { groupCount.add('04'); deviasiList.push({ code: 'RD585(M)', desc: 'Plat Beda Provinsi', app: 'CAC', group: '04 - Unit Pembiayaan', note: 'Wajib BBN atau LTV turun 5%' }); }
 
-      // 05 - Profil Konsumen
       const usia = parseNum(getVal('dev_usia'));
       if (usia > 0) {
         const dev = getUsiaDev(usia);
         if (dev) { groupCount.add('05'); dev.group = '05 - Profil Konsumen'; deviasiList.push(dev); if (dev.app === 'REJECT') hasReject = true; }
       }
 
-      // 06 - Cover Area
       if ($('dev_06_red').checked) { groupCount.add('06'); deviasiList.push({ code: 'C060121(M)', desc: 'Red Area', app: 'CAM', group: '06 - Cover Area & Red Area', note: 'Rekomendasi Collection wajib' }); }
       if ($('dev_06_jauh').checked) { groupCount.add('06'); deviasiList.push({ code: 'C060221(M)', desc: 'Cover Area Jauh', app: 'CAM', group: '06 - Cover Area & Red Area', note: 'Jawa >70KM tidak dibiayai' }); }
 
-      // 07 - Dokumen
       if ($('dev_07_npwp').checked) { groupCount.add('07'); deviasiList.push({ code: 'C070121(A)', desc: 'NPWP Tidak Sesuai', app: 'CAC', group: '07 - Dokumen Pembiayaan', note: 'PH > 50 Juta' }); }
       if ($('dev_07_ttd').checked) { groupCount.add('07'); deviasiList.push({ code: 'RD567(A)', desc: 'Pasangan Tidak TTD', app: 'CAC', group: '07 - Dokumen Pembiayaan', note: 'Isi Form F-179' }); }
 
@@ -1215,7 +1804,7 @@
     function renderDeviasiResult(deviasiList, groupCount, hasReject) {
       const container = $('res-deviasi');
       if (deviasiList.length === 0) {
-        container.innerHTML = `<div class="status-badge status-pass justify-center text-sm w-full">Tidak Ada Deviasi Terdeteksi</div><div class="text-center text-slate-500 text-sm mt-4"><svg class="w-12 h-12 mx-auto mb-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>Aplikasi sesuai ketentuan tanpa penyimpangan.</div>`;
+        container.innerHTML = `<div class="status-badge status-pass justify-center text-sm w-full">Tidak Ada Deviasi Terdeteksi</div><div class="text-center text-[var(--text-muted)] text-sm mt-6"><svg class="w-16 h-16 mx-auto mb-3 text-[var(--accent-emerald)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>Aplikasi sesuai ketentuan tanpa penyimpangan.</div>`;
         return;
       }
 
@@ -1230,14 +1819,14 @@
       const statusText = hasReject ? 'DITEMUKAN REJECT' : 'DITEMUKAN DEVIASI';
       html += `<div class="status-badge ${statusClass} justify-center text-sm w-full">${hasReject ? 'X' : '!'} ${statusText}</div>`;
       
-      html += `<div class="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4"><div class="text-xs text-amber-800 font-semibold mb-1">RINGKASAN</div><div class="grid grid-cols-2 gap-2 text-xs"><div><span class="text-slate-500">Total Deviasi:</span> <span class="font-bold text-slate-700">${deviasiList.length}</span></div><div><span class="text-slate-500">Group Terlibat:</span> <span class="font-bold text-slate-700">${groupCount.size}/7</span></div></div>${groupCount.size > 3 ? '<div class="mt-2 text-xs text-red-600 font-semibold">Peringatan: Lebih dari 3 Group Deviasi! Wajib IM Paper.</div>' : ''}</div>`;
+      html += `<div class="info-box mb-4"><div class="text-xs text-[var(--accent-primary)] font-bold mb-2">RINGKASAN</div><div class="grid grid-cols-2 gap-2 text-xs"><div><span class="text-[var(--text-muted)]">Total Deviasi:</span> <span class="font-bold text-[var(--text-primary)]">${deviasiList.length}</span></div><div><span class="text-[var(--text-muted)]">Group Terlibat:</span> <span class="font-bold text-[var(--text-primary)]">${groupCount.size}/7</span></div></div>${groupCount.size > 3 ? '<div class="mt-2 text-xs text-[var(--accent-coral)] font-bold">Peringatan: Lebih dari 3 Group Deviasi! Wajib IM Paper.</div>' : ''}</div>`;
 
       for (const group in grouped) {
         const hasRejectInGroup = grouped[group].some(d => d.app === 'REJECT');
         html += `<div class="result-group"><div class="result-header ${hasRejectInGroup ? 'invalid' : 'warn'}"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>${group}</div><div class="result-body">`;
         grouped[group].forEach(dev => {
           const appClass = approvalColors[dev.app] || 'app-cac';
-          html += `<div class="result-row"><div class="flex-1"><div class="font-semibold text-indigo-600">${dev.code}</div><div class="text-slate-600">${dev.desc}</div>${dev.note ? `<span class="dev-note">${dev.note}</span>` : ''}</div><div><span class="dev-approval-badge ${appClass}">${dev.app}</span></div></div>`;
+          html += `<div class="result-row"><div class="flex-1"><div class="font-bold text-[var(--accent-primary)]">${dev.code}</div><div class="text-[var(--text-secondary)]">${dev.desc}</div>${dev.note ? `<span class="dev-note">${dev.note}</span>` : ''}</div><div><span class="dev-approval-badge ${appClass}">${dev.app}</span></div></div>`;
         });
         html += `</div></div>`;
       }
@@ -1245,7 +1834,7 @@
       if (!hasReject) {
         html += `<div class="final-approval-box"><div class="text-xs opacity-80">APPROVAL FINAL</div><div class="final-approval-level">${highestApp}</div><div class="final-approval-note">Berdasarkan wewenang tertinggi dari deviasi yang terdeteksi</div></div>`;
       } else {
-        html += `<div class="bg-red-100 border border-red-300 rounded-lg p-3 text-center mt-4"><div class="text-red-700 font-bold">TIDAK DAPAT DIPROSES</div><div class="text-xs text-red-600">Ditemukan kondisi REJECT</div></div>`;
+        html += `<div class="bg-[rgba(244,63,94,0.08)] border border-[rgba(244,63,94,0.2)] rounded-lg p-4 text-center mt-4"><div class="text-[var(--accent-coral)] font-bold">TIDAK DAPAT DIPROSES</div><div class="text-xs text-[var(--accent-coral)] opacity-80">Ditemukan kondisi REJECT</div></div>`;
       }
       container.innerHTML = html;
     }
@@ -1265,7 +1854,7 @@
       container.innerHTML = docs.map(doc => `
         <label class="custom-check">
           <input type="checkbox" id="${doc.id}">
-          <div><span class="font-medium">${doc.label}</span>${doc.mandatory ? '<span class="text-red-500 text-xs ml-1">*</span>' : ''}</div>
+          <div><span class="font-semibold text-[var(--text-primary)]">${doc.label}</span>${doc.mandatory ? '<span class="text-[var(--accent-coral)] text-xs ml-1">*</span>' : ''}</div>
         </label>
       `).join('');
     }
@@ -1343,7 +1932,6 @@
       const rating = getVal('sp_rating'), exp = parseNum(getVal('sp_exp')), usia = parseNum(getVal('sp_usia')), usiaKend = parseNum(getVal('sp_usia_kend')), iir = parseNum(getVal('sp_iir')), tenor = parseNum(getVal('sp_tenor')), jenisKend = getVal('sp_jenis');
       const ltv = parseNum(getVal('sp_ltv'));
 
-      // Dokumen - Dynamic mandatory check
       const docs = [
         { id: 'sp_doc_ktp', label: 'E-KTP', mandatory: true },
         { id: 'sp_doc_kk', label: 'KK', mandatory: true },
@@ -1354,7 +1942,6 @@
       if (missingDocs.length > 0) addResult('Dokumen', 'fail', 'Tidak lengkap: ' + missingDocs.map(d => d.label).join(', '));
       else addResult('Dokumen', 'pass', `Dokumen ${superType === 'nc' ? 'lengkap (Normal Doc)' : 'lengkap (Simple Doc)'}`);
 
-      // Negative List
       if (superType === 'ro' && (rating === 'warning' || rating === 'bad')) addResult('Negative List', 'fail', `Rating ${rating} tidak dibiayai RO Super`);
       else addResult('Negative List', 'pass', 'Rating sesuai');
       if (getVal('sp_internal') === 'ya') addResult('Negative List', 'fail', 'Internal Negative List');
@@ -1364,13 +1951,11 @@
       if (getVal('sp_kbij') === 'no') addResult('Negative List', 'fail', 'KBIJ No tidak diperbolehkan');
       else addResult('Negative List', 'pass', 'KBIJ sesuai');
 
-      // Data Konsumen
       if (usia > 60) addResult('Data Konsumen', 'fail', `Usia ${usia} > Max 60 Thn`);
       else addResult('Data Konsumen', 'pass', `Usia ${usia} thn sesuai`);
       if (getVal('sp_rumah') === 'sewa') addResult('Data Konsumen', 'fail', 'Tidak boleh sewa');
       else addResult('Data Konsumen', 'pass', 'Status rumah sesuai');
 
-      // Keuangan
       if (exp > 250000000) addResult('Keuangan', 'fail', `Exposure ${formatCurr(exp)} > 250 Jt`);
       else addResult('Keuangan', 'pass', `Exposure ${formatCurr(exp)} sesuai`);
       
@@ -1385,7 +1970,6 @@
       if (tenor > 48) addResult('Keuangan', 'warn', 'Tenor > 48 = Deviasi');
       else addResult('Keuangan', 'pass', `Tenor ${tenor} bulan`);
 
-      // Kendaraan
       let maxAge = 10;
       if (superType === 'ro' && jenisKend === 'passenger') maxAge = 17;
       if (usiaKend > maxAge) addResult('Kendaraan', 'fail', `Usia kendaraan ${usiaKend} > ${maxAge} thn`);
@@ -1396,7 +1980,6 @@
       if (getVal('sp_bpkb') === 'oranglain') addResult('Kendaraan', 'warn', 'BPKB Orang Lain: Wajib BBN');
       else addResult('Kendaraan', 'pass', 'BPKB sendiri/pasangan');
 
-      // Super Type Specific
       if (superType === 'to') {
         const jenisKons = getVal('sp_jenis_kons');
         if (jenisKons === 'baru') addResult('Take Over', 'fail', 'Konsumen Baru tidak diperbolehkan');
@@ -1424,9 +2007,9 @@
     function renderEmptyResult(containerId, title, items) {
       const container = $(containerId);
       let html = `<div class="status-badge status-fail justify-center text-sm w-full">X ${title}</div>`;
-      html += '<div class="bg-red-50 border border-red-200 rounded-lg p-3 mt-4">';
-      html += '<div class="text-xs text-red-800 font-semibold mb-2">Field berikut wajib diisi:</div>';
-      html += '<ul class="text-xs text-red-700 space-y-1">';
+      html += '<div class="bg-[rgba(244,63,94,0.05)] border border-[rgba(244,63,94,0.15)] rounded-lg p-4 mt-4">';
+      html += '<div class="text-xs text-[var(--accent-coral)] font-bold mb-2">Field berikut wajib diisi:</div>';
+      html += '<ul class="text-xs text-[var(--accent-coral)] space-y-1">';
       items.forEach(item => html += `<li>- ${item}</li>`);
       html += '</ul></div>';
       container.innerHTML = html;

@@ -1974,30 +1974,96 @@
       return [...new Set(missing)];
     }
 
-    function renderNorkilComplianceResult(failReasons, notes) {
+    function buildNorkilSummary(data) {
+      const productLabels = {
+        mobilku: 'MobilKu',
+        motorku: 'MotorKu',
+        newbike_bpjs: 'NewBike BPJS',
+        newbike_nonbpjs: 'NewBike Non-BPJS'
+      };
+      const statusLabels = { baru: 'Konsumen Baru', eksisting: 'Konsumen Terdaftar' };
+      const ratingLabels = { excellent: 'Excellent', good: 'Good', normal: 'Normal' };
+
+      const summary = [
+        { label: 'Produk', value: productLabels[currentProduct] || currentProduct },
+        { label: 'Status Konsumen', value: statusLabels[data.status] || '-' },
+        { label: 'Rating', value: data.status === 'eksisting' ? (ratingLabels[data.rating] || '-') : 'Tidak Berlaku' },
+        { label: 'Total Exposure', value: data.exp > 0 ? formatCurr(data.exp) : '-' },
+        { label: 'Tenor', value: data.tenor > 0 ? `${data.tenor} bulan` : '-' },
+        { label: 'IIR', value: data.iir > 0 ? `${data.iir}%` : '-' },
+        { label: 'LTV', value: data.ltv > 0 ? `${data.ltv}%` : '-' },
+        { label: 'DP', value: data.dpPerc > 0 ? `${data.dpPerc}%` : '-' },
+        { label: 'Angsuran Baru', value: data.angsuran > 0 ? formatCurr(data.angsuran) : '-' }
+      ];
+
+      const maxLTVDisplay = $('max_ltv_display')?.textContent?.trim();
+      if (maxLTVDisplay && maxLTVDisplay !== '-') summary.push({ label: 'Batas Max LTV', value: maxLTVDisplay });
+
+      const maxAngsuranDisplay = $('max_angsuran_display')?.textContent?.trim();
+      if (maxAngsuranDisplay && maxAngsuranDisplay !== '-') summary.push({ label: 'Batas Max Angsuran', value: maxAngsuranDisplay });
+
+      return summary.filter(item => item.value && item.value !== '-');
+    }
+
+    function renderNorkilComplianceResult(failReasons, notes, summaryItems) {
       const container = $('res-norkil');
       const uniqueFailReasons = [...new Set(failReasons)];
       const uniqueNotes = [...new Set(notes || [])];
+      const isCompliant = uniqueFailReasons.length === 0;
+      const analyzedAt = new Date().toLocaleString('id-ID', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
 
-      if (uniqueFailReasons.length === 0) {
-        let html = '<div class="status-badge status-pass justify-center text-sm w-full">SESUAI DENGAN SK NORMAL KILAT YANG BERLAKU</div>';
-        if (uniqueNotes.length > 0) {
-          html += '<div class="bg-[rgba(245,158,11,0.08)] border border-[rgba(245,158,11,0.25)] rounded-lg p-4 mt-4">';
-          html += '<div class="text-xs text-[var(--accent-gold)] font-bold mb-2">CATATAN:</div>';
-          html += '<ul class="text-xs text-[var(--text-secondary)] space-y-1">';
-          uniqueNotes.forEach(note => { html += `<li>- ${note}</li>`; });
-          html += '</ul></div>';
-        }
-        container.innerHTML = html;
-        return;
+      let html = '<div class="space-y-4">';
+      html += `<div class="status-badge ${isCompliant ? 'status-pass' : 'status-fail'} justify-center text-sm w-full">${isCompliant ? 'SESUAI DENGAN SK NORMAL KILAT YANG BERLAKU' : 'TIDAK LAYAK'}</div>`;
+
+      html += '<div class="info-box">';
+      html += '<div class="text-xs text-[var(--accent-primary)] font-bold mb-2">RINGKASAN HASIL</div>';
+      html += '<div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">';
+      html += `<div><span class="text-[var(--text-muted)]">Poin Tidak Sesuai:</span><div class="font-bold text-[var(--accent-coral)]">${uniqueFailReasons.length}</div></div>`;
+      html += `<div><span class="text-[var(--text-muted)]">Catatan:</span><div class="font-bold text-[var(--accent-gold)]">${uniqueNotes.length}</div></div>`;
+      html += `<div><span class="text-[var(--text-muted)]">Waktu Analisa:</span><div class="font-bold text-[var(--text-primary)]">${analyzedAt}</div></div>`;
+      html += '</div></div>';
+
+      if (summaryItems && summaryItems.length > 0) {
+        html += '<div class="result-group">';
+        html += '<div class="result-header valid">Data Pengajuan</div>';
+        html += '<div class="result-body"><div class="grid grid-cols-1 sm:grid-cols-2 gap-2">';
+        summaryItems.forEach(item => {
+          html += '<div class="rounded-lg border border-[rgba(148,163,184,0.12)] bg-[rgba(255,255,255,0.85)] p-3">';
+          html += `<div class="text-[11px] text-[var(--text-muted)]">${item.label}</div>`;
+          html += `<div class="text-xs font-semibold text-[var(--text-primary)] mt-1">${item.value}</div>`;
+          html += '</div>';
+        });
+        html += '</div></div></div>';
       }
 
-      let html = '<div class="status-badge status-fail justify-center text-sm w-full">TIDAK LAYAK</div>';
-      html += '<div class="bg-[rgba(244,63,94,0.05)] border border-[rgba(244,63,94,0.15)] rounded-lg p-4 mt-4">';
-      html += '<div class="text-xs text-[var(--accent-coral)] font-bold mb-2">TIDAK LAYAK KARENA:</div>';
-      html += '<ul class="text-xs text-[var(--accent-coral)] space-y-1">';
-      uniqueFailReasons.forEach(reason => { html += `<li>- ${reason}</li>`; });
-      html += '</ul></div>';
+      if (!isCompliant) {
+        html += '<div class="result-group">';
+        html += '<div class="result-header invalid">Tidak Layak Karena</div>';
+        html += '<div class="result-body"><ol class="text-xs text-[var(--text-secondary)] space-y-2 list-decimal list-inside">';
+        uniqueFailReasons.forEach(reason => { html += `<li class="marker:text-[var(--accent-coral)]">${reason}</li>`; });
+        html += '</ol></div></div>';
+      } else {
+        html += '<div class="result-group">';
+        html += '<div class="result-header valid">Keterangan</div>';
+        html += '<div class="result-body text-xs text-[var(--text-secondary)]">Semua parameter utama sesuai ketentuan Normal Kilat.</div>';
+        html += '</div>';
+      }
+
+      if (uniqueNotes.length > 0) {
+        html += '<div class="result-group">';
+        html += '<div class="result-header warn">Catatan / Action Item</div>';
+        html += '<div class="result-body"><ul class="text-xs text-[var(--text-secondary)] space-y-1">';
+        uniqueNotes.forEach(note => { html += `<li>- ${note}</li>`; });
+        html += '</ul></div></div>';
+      }
+
+      html += '</div>';
       container.innerHTML = html;
     }
 
@@ -2023,6 +2089,7 @@
       const ltv = parseNum(getVal('nk_ltv'));
       const dpPerc = parseNum(getVal('nk_dp_perc'));
       const angsuran = parseNum(getVal('nk_angsuran'));
+      const summaryItems = buildNorkilSummary({ status, rating, exp, tenor, iir, ltv, dpPerc, angsuran });
 
       const docs = dokumenProduk[currentProduct] || [];
       const missingDocs = docs.filter(d => d.mandatory && !$(d.id).checked);
@@ -2181,7 +2248,7 @@
         }
       }
 
-      renderNorkilComplianceResult(failReasons, notes);
+      renderNorkilComplianceResult(failReasons, notes, summaryItems);
     }
 
     /* ===== DEVIASI LOGIC ===== */

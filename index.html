@@ -2727,36 +2727,143 @@
 
       if (superType === 'ro') addResult('RO Super', 'pass', 'Approval final di CAC');
 
-      renderSuperComplianceResult(results);
+      const superSummary = {
+        type: superType,
+        rating,
+        usia,
+        usiaKend,
+        iir,
+        ltv,
+        tenor,
+        exp,
+        jenisKend,
+        rumah: getVal('sp_rumah'),
+        bpkb: getVal('sp_bpkb'),
+        stnk: getVal('sp_stnk'),
+        jenisKons: getVal('sp_jenis_kons'),
+        toKategori: getVal('sp_to_kategori'),
+        toBayar: parseNum(getVal('sp_to_bayar')),
+        toOd: getVal('sp_to_od')
+      };
+
+      renderSuperComplianceResult(results, superSummary);
     }
 
-    function renderSuperComplianceResult(results) {
+    function renderSuperComplianceResult(results, summary) {
       const container = $('res-super');
       const failReasons = [];
+      const warnReasons = [];
 
       Object.keys(results.categories).forEach(cat => {
         results.categories[cat].forEach(item => {
+          const plainText = item.m.replace(/<[^>]*>/g, '');
           if (item.t === 'fail') {
-            const plainText = item.m.replace(/<[^>]*>/g, '');
             failReasons.push(`${cat}: ${plainText}`);
+          } else if (item.t === 'warn') {
+            warnReasons.push(`${cat}: ${plainText}`);
           }
         });
       });
 
       const uniqueFailReasons = [...new Set(failReasons)];
-      if (uniqueFailReasons.length === 0) {
-        container.innerHTML = `
-          <div class="status-badge status-pass justify-center text-sm w-full">OK SESUAI DENGAN SK SUPER MOBILKU YANG BERLAKU</div>
-        `;
-        return;
+      const uniqueWarnReasons = [...new Set(warnReasons)];
+
+      const typeLabels = { ro: 'RO Super', to: 'Take Over Super', nc: 'NC Super' };
+      const rumahLabels = { sendiri: 'Milik Sendiri/Keluarga', sewa: 'Sewa/Kontrak/Kost' };
+      const bpkbLabels = { sendiri: 'Sendiri/Pasangan', oranglain: 'Orang Lain' };
+      const stnkLabels = { hidup: 'Hidup', mati: 'Mati' };
+      const odLabels = { kurang: '< 14 Hari', lebih: '> 14 Hari' };
+      const jenisLabels = { passenger: 'Passenger', commercial: 'Commercial' };
+      const ratingLabels = { excellent: 'Excellent', good: 'Good', normal: 'Normal', warning: 'Warning', bad: 'Bad' };
+      const konsLabels = { baru: 'Konsumen Baru', terdaftar: 'Konsumen Terdaftar' };
+      const analyzedAt = new Date().toLocaleString('id-ID', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+
+      const summaryItems = [
+        { label: 'Skema Super', value: typeLabels[summary.type] || summary.type },
+        { label: 'Jenis Kendaraan', value: jenisLabels[summary.jenisKend] || '-' },
+        { label: 'Total Exposure', value: summary.exp > 0 ? formatCurr(summary.exp) : '-' },
+        { label: 'LTV', value: summary.ltv > 0 ? `${summary.ltv}%` : '-' },
+        { label: 'IIR', value: summary.iir > 0 ? `${summary.iir}%` : '-' },
+        { label: 'Tenor', value: summary.tenor > 0 ? `${summary.tenor} bulan` : '-' },
+        { label: 'Usia Kendaraan', value: summary.usiaKend > 0 ? `${summary.usiaKend} tahun` : '-' },
+        { label: 'Status Rumah', value: rumahLabels[summary.rumah] || '-' },
+        { label: 'BPKB', value: bpkbLabels[summary.bpkb] || '-' },
+        { label: 'Status STNK', value: stnkLabels[summary.stnk] || '-' }
+      ];
+
+      if (summary.type !== 'to') summaryItems.push({ label: 'Usia Pemohon', value: summary.usia > 0 ? `${summary.usia} tahun` : '-' });
+      if (summary.type === 'ro') summaryItems.push({ label: 'Rating', value: ratingLabels[summary.rating] || '-' });
+      if (summary.type === 'to') {
+        summaryItems.push({ label: 'Jenis Konsumen', value: konsLabels[summary.jenisKons] || '-' });
+        summaryItems.push({ label: 'Kategori Kendaraan', value: summary.toKategori || '-' });
+        summaryItems.push({ label: 'Angsuran Dibayar', value: summary.toBayar > 0 ? `${summary.toBayar} bulan` : '-' });
+        summaryItems.push({ label: 'Overdue', value: odLabels[summary.toOd] || '-' });
       }
 
-      let html = `<div class="status-badge status-fail justify-center text-sm w-full">X TIDAK LAYAK</div>`;
-      html += '<div class="bg-[rgba(244,63,94,0.05)] border border-[rgba(244,63,94,0.15)] rounded-lg p-4 mt-4">';
-      html += '<div class="text-xs text-[var(--accent-coral)] font-bold mb-2">TIDAK LAYAK KARENA:</div>';
-      html += '<ul class="text-xs text-[var(--accent-coral)] space-y-1">';
-      uniqueFailReasons.forEach(reason => { html += `<li>- ${reason}</li>`; });
-      html += '</ul></div>';
+      const statusClass = uniqueFailReasons.length > 0 ? 'status-fail' : 'status-pass';
+      const statusText = uniqueFailReasons.length > 0 ? 'TIDAK LAYAK' : 'SESUAI DENGAN SK SUPER MOBILKU YANG BERLAKU';
+
+      let html = '<div class="space-y-4">';
+      html += `<div class="status-badge ${statusClass} justify-center text-sm w-full">${statusText}</div>`;
+
+      html += '<div class="info-box">';
+      html += '<div class="text-xs text-[var(--accent-primary)] font-bold mb-2">RINGKASAN HASIL</div>';
+      html += '<div class="grid grid-cols-1 sm:grid-cols-4 gap-2 text-xs">';
+      html += `<div><span class="text-[var(--text-muted)]">Kategori Dicek:</span><div class="font-bold text-[var(--text-primary)]">${Object.keys(results.categories).length}</div></div>`;
+      html += `<div><span class="text-[var(--text-muted)]">Poin Tidak Sesuai:</span><div class="font-bold text-[var(--accent-coral)]">${uniqueFailReasons.length}</div></div>`;
+      html += `<div><span class="text-[var(--text-muted)]">Catatan:</span><div class="font-bold text-[var(--accent-gold)]">${uniqueWarnReasons.length}</div></div>`;
+      html += `<div><span class="text-[var(--text-muted)]">Waktu Analisa:</span><div class="font-bold text-[var(--text-primary)]">${analyzedAt}</div></div>`;
+      html += '</div></div>';
+
+      html += '<div class="result-group">';
+      html += '<div class="result-header valid">Data Pengajuan Super</div>';
+      html += '<div class="result-body"><div class="grid grid-cols-1 sm:grid-cols-2 gap-2">';
+      summaryItems.forEach(item => {
+        html += '<div class="rounded-lg border border-[rgba(148,163,184,0.12)] bg-[rgba(255,255,255,0.85)] p-3">';
+        html += `<div class="text-[11px] text-[var(--text-muted)]">${item.label}</div>`;
+        html += `<div class="text-xs font-semibold text-[var(--text-primary)] mt-1">${item.value}</div>`;
+        html += '</div>';
+      });
+      html += '</div></div></div>';
+
+      if (uniqueFailReasons.length > 0) {
+        html += '<div class="result-group">';
+        html += '<div class="result-header invalid">TIDAK LAYAK KARENA:</div>';
+        html += '<div class="result-body"><ol class="text-xs text-[var(--text-secondary)] space-y-2 list-decimal list-inside">';
+        uniqueFailReasons.forEach(reason => { html += `<li class="marker:text-[var(--accent-coral)]">${reason}</li>`; });
+        html += '</ol></div></div>';
+      }
+
+      if (uniqueWarnReasons.length > 0) {
+        html += '<div class="result-group">';
+        html += '<div class="result-header warn">Catatan / Action Item</div>';
+        html += '<div class="result-body"><ul class="text-xs text-[var(--text-secondary)] space-y-1">';
+        uniqueWarnReasons.forEach(reason => { html += `<li>- ${reason}</li>`; });
+        html += '</ul></div></div>';
+      }
+
+      const catOrder = ['Dokumen', 'Negative List', 'Data Konsumen', 'Keuangan', 'Kendaraan', 'Take Over', 'NC Super', 'RO Super'];
+      const sortedCats = Object.keys(results.categories).sort((a, b) => catOrder.indexOf(a) - catOrder.indexOf(b));
+      sortedCats.forEach(cat => {
+        const items = results.categories[cat];
+        const hasFail = items.some(i => i.t === 'fail');
+        const hasWarn = items.some(i => i.t === 'warn');
+        const headerClass = hasFail ? 'invalid' : (hasWarn ? 'warn' : 'valid');
+        html += `<div class="result-group"><div class="result-header ${headerClass}">${cat}</div><div class="result-body">`;
+        items.forEach(item => {
+          const msg = item.m.replace(/<[^>]*>/g, '');
+          html += `<div class="result-row"><div class="res-icon ${item.t === 'pass' ? 'pass' : (item.t === 'fail' ? 'fail' : 'warn')}">${item.t === 'pass' ? 'OK' : (item.t === 'fail' ? 'X' : '!')}</div><div class="res-text">${msg}</div></div>`;
+        });
+        html += '</div></div>';
+      });
+
+      html += '</div>';
       container.innerHTML = html;
     }
 

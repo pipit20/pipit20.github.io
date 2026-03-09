@@ -1770,9 +1770,10 @@
       const status = getVal('nk_status');
       const rumah = getVal('nk_rumah');
       const kbij = getVal('nk_kbij');
+      const showLamaTinggal = rumah === 'sewa' && currentProduct !== 'mobilku';
 
       $('row_rating').classList.toggle('hidden', status !== 'eksisting');
-      $('row_lama_tinggal').classList.toggle('hidden', rumah !== 'sewa');
+      $('row_lama_tinggal').classList.toggle('hidden', !showLamaTinggal);
 
       const rowsToHide = [
         'row_region', 'row_bpjs', 'row_dukcapil', 'row_kbij_pas', 'row_kbij_no_bd', 'row_kbij_no_dpd', 'row_kbij_no_slik',
@@ -1910,7 +1911,7 @@
       requireField('nk_exp', 'Total Exposure');
 
       if (status === 'eksisting') requireField('nk_rating', 'Rating');
-      if (rumah === 'sewa') requireField('nk_lama_tinggal', 'Lama Tinggal');
+      if (rumah === 'sewa' && currentProduct !== 'mobilku') requireField('nk_lama_tinggal', 'Lama Tinggal');
 
       if (currentProduct === 'mobilku') {
         requireField('nk_lama_kerja', 'Lama Kerja');
